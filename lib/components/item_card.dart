@@ -5,8 +5,8 @@ import 'package:toolmart/constants.dart';
 class ItemCard extends StatelessWidget {
   const ItemCard({super.key});
 
-  static const _height = 201.0;
-  static const _width = 165.0;
+  static const height = 201.0;
+  static const width = 165.0;
 
   static final _boxShadow = [
     BoxShadow(
@@ -19,8 +19,8 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: _height,
-      width: _width,
+      height: height,
+      width: width,
       child: Stack(
         children: [
           Container(
@@ -32,7 +32,7 @@ class ItemCard extends StatelessWidget {
           ),
           const Positioned(
             bottom: 0,
-            child: _ItemLabel(width: _width),
+            child: _ItemLabel(width: width),
           ),
         ],
       ),
