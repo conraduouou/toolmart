@@ -12,25 +12,45 @@ class LandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          const Align(
-            alignment: Alignment.center,
-            child: _LandingIllustrations(),
-          ),
-          Positioned(
-            bottom: 20,
-            right: 24,
-            child: Text(
-              'Skip',
-              style: kBodyStyle.copyWith(
-                color: kSecondaryColor.shade40,
+    return ChangeNotifierProvider(
+      create: (_) => ValueNotifier(0),
+      builder: (_, child) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: Stack(
+            children: const [
+              Align(
+                alignment: Alignment.center,
+                child: _LandingIllustrations(),
               ),
-            ),
-          )
-        ],
+              Positioned(
+                bottom: 20,
+                right: 24,
+                child: _SkipText(),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _SkipText extends StatelessWidget {
+  const _SkipText();
+
+  @override
+  Widget build(BuildContext context) {
+    final notifier = context.watch<ValueNotifier<int>>();
+
+    return AnimatedOpacity(
+      opacity: notifier.value == 2 ? 0 : 1,
+      duration: const Duration(seconds: 1),
+      child: Text(
+        'Skip',
+        style: kBodyStyle.copyWith(
+          color: kSecondaryColor.shade40,
+        ),
       ),
     );
   }
@@ -47,13 +67,10 @@ class _LandingIllustrationsState extends State<_LandingIllustrations> {
   static const imgHeight = 380.0;
 
   PageController controller = PageController();
-  late ValueNotifier<int> activePageNotifier;
 
   @override
   void initState() {
     super.initState();
-    activePageNotifier = ValueNotifier(0);
-
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       _delayOnNext();
     });
@@ -69,44 +86,63 @@ class _LandingIllustrationsState extends State<_LandingIllustrations> {
     await Future.delayed(const Duration(seconds: 3));
 
     controller.nextPage(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeOutCubic,
     );
   }
 
-  void _onPageChanged(int page) async {
+  void _onPageChanged(int page, BuildContext context) async {
+    final activePageNotifier = context.read<ValueNotifier<int>>();
     activePageNotifier.value = page;
-    if (page < 1) await _delayOnNext();
+    if (page < 2) await _delayOnNext();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Stack(
       children: [
-        SizedBox(
-          height: imgHeight,
-          child: PageView.builder(
-            controller: controller,
-            onPageChanged: _onPageChanged,
-            itemBuilder: (context, index) => _LandingIllustration(page: index),
+        Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            height: imgHeight,
+            child: PageView.builder(
+              controller: controller,
+              onPageChanged: (page) => _onPageChanged(page, context),
+              itemBuilder: (context, index) =>
+                  index < 2 ? _LandingIllustration(page: index) : Container(),
+            ),
           ),
         ),
-        const SizedBox(height: 93),
-        ChangeNotifierProvider.value(
-          value: activePageNotifier,
-          builder: (context, child) {
-            final page = context.watch<ValueNotifier<int>>().value;
-            return _LandingProgress(activePage: page);
-          },
-        ),
+        const _LandingProgress(),
       ],
     );
   }
 }
 
+class _LandingProgress extends StatelessWidget {
+  const _LandingProgress();
+
+  @override
+  Widget build(BuildContext context) {
+    final notifier = context.watch<ValueNotifier<int>>();
+    final size = MediaQuery.of(context).size;
+
+    return AnimatedPositioned(
+      bottom: notifier.value == 2 ? 20 : 80,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeOutCubic,
+      child: SizedBox(
+        width: size.width,
+        child: _LandingProgressDots(activePage: notifier.value),
+      ),
+    );
+  }
+}
+
 class _LandingIllustration extends StatelessWidget {
-  const _LandingIllustration({this.page = 0});
+  const _LandingIllustration({
+    this.page = 0,
+  });
 
   final int page;
 
@@ -141,8 +177,8 @@ class _LandingIllustration extends StatelessWidget {
   }
 }
 
-class _LandingProgress extends StatelessWidget {
-  const _LandingProgress({
+class _LandingProgressDots extends StatelessWidget {
+  const _LandingProgressDots({
     required this.activePage,
   });
 
