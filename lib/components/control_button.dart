@@ -1,27 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:toolmart/color_schemes.g.dart';
 
 class ControlButton extends StatelessWidget {
   const ControlButton({
     super.key,
     this.onTap,
     required this.assetPath,
+    this.size,
+    this.color,
+    this.boxShadow,
   });
 
   final VoidCallback? onTap;
   final String assetPath;
+  final double? size;
+  final Color? color;
+  final List<BoxShadow>? boxShadow;
 
   const ControlButton.minus({
     super.key,
     this.onTap,
     this.assetPath = 'assets/icons/ic-minus.svg',
+    this.size,
+    this.color,
+    this.boxShadow,
   });
 
   const ControlButton.plus({
     super.key,
     this.onTap,
     this.assetPath = 'assets/icons/ic-plus.svg',
+    this.size,
+    this.color,
+    this.boxShadow,
   });
+
+  ControlButton.error({
+    super.key,
+    this.onTap,
+    this.assetPath = 'assets/icons/ic-cross.svg',
+    this.size,
+    this.color = kErrorColor,
+  }) : boxShadow = [
+          BoxShadow(
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+            color: Colors.black.withAlpha((1 / 5 * 255).floor()),
+          ),
+        ];
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +59,20 @@ class ControlButton extends StatelessWidget {
       highlightColor: Colors.transparent,
       onTap: onTap,
       child: Container(
-        height: 35,
-        width: 35,
-        padding: const EdgeInsets.all(7),
+        height: size ?? 35,
+        width: size ?? 35,
+        padding: EdgeInsets.all(size != null ? size! / 5 : 7),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-              color: Colors.black.withAlpha((1 / 10 * 255).floor()),
-            ),
-          ],
+          color: color ?? Colors.white,
+          boxShadow: boxShadow ??
+              [
+                BoxShadow(
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                  color: Colors.black.withAlpha((1 / 10 * 255).floor()),
+                ),
+              ],
         ),
         child: SvgPicture.asset(assetPath),
       ),

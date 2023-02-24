@@ -6,9 +6,11 @@ class ToolMartBackButton extends StatelessWidget {
   const ToolMartBackButton({
     super.key,
     this.color,
+    this.boxShadow,
   });
 
   final Color? color;
+  final List<BoxShadow>? boxShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +21,11 @@ class ToolMartBackButton extends StatelessWidget {
       splashColor: Colors.transparent,
       onTap: () => Navigator.of(context).pop(context),
       child: Container(
-        decoration:
-            const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          boxShadow: boxShadow,
+        ),
         padding: const EdgeInsets.all(15),
         child: SvgPicture.asset(
           'assets/icons/ic-arrow.svg',
