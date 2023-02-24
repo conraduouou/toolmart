@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/control_button.dart';
 import 'package:toolmart/components/item_card.dart';
+import 'package:toolmart/components/sticky_button.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/constants.dart';
@@ -19,6 +20,7 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: const StickyButton(text: 'Checkout'),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
