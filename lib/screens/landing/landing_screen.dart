@@ -70,7 +70,7 @@ class _LandingIllustrationsState extends State<_LandingIllustrations> {
 
     controller.nextPage(
       duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
+      curve: Curves.easeOutCubic,
     );
   }
 
