@@ -125,7 +125,7 @@ const kErrorColor = ToolMartColor(
   },
 );
 
-const kNeturalColor = ToolMartColor(
+const kNeutralColor = ToolMartColor(
   0xFF7E7571,
   {
     0: Color(0xFF000000),
