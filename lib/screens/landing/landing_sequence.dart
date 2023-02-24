@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/constants.dart';
+import 'package:toolmart/screens/landing/login_elements.dart';
 
 class LandingSequence extends StatefulWidget {
   const LandingSequence({super.key});
@@ -13,7 +14,8 @@ class LandingSequence extends StatefulWidget {
 }
 
 class _LandingSequenceState extends State<LandingSequence> {
-  static const imgHeight = 380.0;
+  static const _nextPageDuration = Duration(milliseconds: 500);
+  static const _imgHeight = 380.0;
 
   PageController controller = PageController();
 
@@ -35,7 +37,7 @@ class _LandingSequenceState extends State<LandingSequence> {
     await Future.delayed(const Duration(seconds: 3));
 
     controller.nextPage(
-      duration: const Duration(milliseconds: 500),
+      duration: _nextPageDuration,
       curve: Curves.easeOutCubic,
     );
   }
@@ -53,12 +55,13 @@ class _LandingSequenceState extends State<LandingSequence> {
         Align(
           alignment: Alignment.center,
           child: SizedBox(
-            height: imgHeight,
+            height: _imgHeight,
             child: PageView.builder(
               controller: controller,
               onPageChanged: (page) => _onPageChanged(page, context),
-              itemBuilder: (context, index) =>
-                  index < 2 ? _LandingIllustration(page: index) : Container(),
+              itemBuilder: (context, index) => index < 2
+                  ? _LandingIllustration(page: index)
+                  : const LoginElements(),
             ),
           ),
         ),
@@ -73,9 +76,9 @@ class _LandingIllustration extends StatelessWidget {
     this.page = 0,
   });
 
-  final int page;
+  static const _landingHeight = 275.0;
 
-  static const landingHeight = 275.0;
+  final int page;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +86,7 @@ class _LandingIllustration extends StatelessWidget {
       children: [
         SvgPicture.asset(
           'assets/illustrations/landing-${page + 1}.svg',
-          height: landingHeight,
+          height: _landingHeight,
         ),
         const SizedBox(height: 30),
         Text(
@@ -109,14 +112,16 @@ class _LandingIllustration extends StatelessWidget {
 class _LandingProgress extends StatelessWidget {
   const _LandingProgress();
 
+  static const _toLoginAnimation = Duration(seconds: 1);
+
   @override
   Widget build(BuildContext context) {
     final notifier = context.watch<ValueNotifier<int>>();
     final size = MediaQuery.of(context).size;
 
     return AnimatedPositioned(
-      bottom: notifier.value == 2 ? 20 : 80,
-      duration: const Duration(seconds: 1),
+      bottom: notifier.value == 2 ? 20 : 80, // when page shows LoginElements
+      duration: _toLoginAnimation,
       curve: Curves.easeOutCubic,
       child: SizedBox(
         width: size.width,

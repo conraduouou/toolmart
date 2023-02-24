@@ -11,26 +11,29 @@ class LandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ValueNotifier(0),
-      builder: (_, child) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: Stack(
-            children: const [
-              Align(
-                alignment: Alignment.center,
-                child: LandingSequence(),
-              ),
-              Positioned(
-                bottom: 20,
-                right: 24,
-                child: _SkipText(),
-              )
-            ],
-          ),
-        );
-      },
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: ChangeNotifierProvider(
+        create: (_) => ValueNotifier(0),
+        builder: (_, child) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: Stack(
+              children: const [
+                Align(
+                  alignment: Alignment.center,
+                  child: LandingSequence(),
+                ),
+                Positioned(
+                  bottom: 20,
+                  right: 24,
+                  child: _SkipText(),
+                )
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -38,13 +41,15 @@ class LandingScreen extends StatelessWidget {
 class _SkipText extends StatelessWidget {
   const _SkipText();
 
+  static const _toLoginAnimation = Duration(seconds: 1);
+
   @override
   Widget build(BuildContext context) {
     final notifier = context.watch<ValueNotifier<int>>();
 
     return AnimatedOpacity(
-      opacity: notifier.value == 2 ? 0 : 1,
-      duration: const Duration(seconds: 1),
+      opacity: notifier.value == 2 ? 0 : 1, // when page shows LoginElements
+      duration: _toLoginAnimation,
       child: Text(
         'Skip',
         style: kBodyStyle.copyWith(
