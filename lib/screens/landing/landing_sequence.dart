@@ -58,28 +58,36 @@ class _LandingSequenceState extends State<LandingSequence> {
   @override
   Widget build(BuildContext context) {
     final notifier = context.watch<ValueNotifier<int>>();
+    final size = MediaQuery.of(context).size;
 
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: AnimatedSwitcher(
-            duration: _nextPageDuration,
-            child: notifier.value < 2
-                ? SizedBox(
-                    height: _imgHeight,
-                    child: PageView.builder(
-                      controller: controller,
-                      onPageChanged: (page) => _onPageChanged(page, context),
-                      itemBuilder: (context, index) =>
-                          _LandingIllustration(page: index),
-                    ),
-                  )
-                : const LoginElements(),
-          ),
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: SizedBox(
+        height: size.height,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: AnimatedSwitcher(
+                duration: const Duration(seconds: 1),
+                child: notifier.value < 2
+                    ? SizedBox(
+                        height: _imgHeight,
+                        child: PageView.builder(
+                          controller: controller,
+                          onPageChanged: (page) =>
+                              _onPageChanged(page, context),
+                          itemBuilder: (context, index) =>
+                              _LandingIllustration(page: index),
+                        ),
+                      )
+                    : const LoginElements(),
+              ),
+            ),
+            const _LandingProgress(),
+          ],
         ),
-        const _LandingProgress(),
-      ],
+      ),
     );
   }
 }
