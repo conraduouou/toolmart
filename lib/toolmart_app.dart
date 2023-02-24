@@ -13,6 +13,12 @@ class ToolMartApp extends StatelessWidget {
       color: kPrimaryColor,
       theme: ThemeData(
         splashColor: Colors.transparent,
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
+            TargetPlatform.values,
+            value: (dynamic _) => const CupertinoPageTransitionsBuilder(),
+          ),
+        ),
       ),
       title: 'Flutter Demo',
       initialRoute: LandingScreen.id,

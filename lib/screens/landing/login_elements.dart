@@ -4,6 +4,7 @@ import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/toolmart_button.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/constants.dart';
+import 'package:toolmart/screens/home/home_screen.dart';
 
 class LoginElements extends StatelessWidget {
   const LoginElements({super.key});
@@ -34,6 +35,7 @@ class LoginElements extends StatelessWidget {
           ToolMartButton.primary(
             text: 'Login',
             width: 224,
+            onTap: () => Navigator.of(context).pushNamed(HomeScreen.id),
           ),
           const SizedBox(height: 23),
           ToolMartButton.secondary(

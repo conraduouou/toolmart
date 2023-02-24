@@ -12,6 +12,7 @@ class ToolMartButton extends StatefulWidget {
     this.width,
     this.border,
     this.fontWeight,
+    this.onTap,
   });
 
   final double? height;
@@ -21,6 +22,7 @@ class ToolMartButton extends StatefulWidget {
   final Color? color;
   final Color? textColor;
   final FontWeight? fontWeight;
+  final VoidCallback? onTap;
 
   ToolMartButton.primary({
     super.key,
@@ -30,6 +32,7 @@ class ToolMartButton extends StatefulWidget {
     this.border,
     this.fontWeight = FontWeight.bold,
     this.textColor = Colors.white,
+    this.onTap,
   }) : color = kPrimaryColor.shade60;
 
   ToolMartButton.secondary({
@@ -39,6 +42,7 @@ class ToolMartButton extends StatefulWidget {
     this.height,
     this.width,
     this.fontWeight,
+    this.onTap,
   })  : border = Border.all(width: 2, color: kPrimaryColor),
         textColor = kPrimaryColor.shade60;
 
@@ -57,6 +61,7 @@ class _ToolMartButtonState extends State<ToolMartButton> {
       highlightColor: Colors.transparent,
       hoverColor: Colors.transparent,
       splashColor: Colors.transparent,
+      onTap: widget.onTap,
       child: Stack(
         children: [
           Container(
