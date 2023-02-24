@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/item_card.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
+import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/constants.dart';
 
 class HomeBody extends StatelessWidget {
@@ -60,7 +61,7 @@ class _HomeHeader extends StatelessWidget {
       child: Stack(
         children: [
           CustomPaint(
-            foregroundPainter: _TrianglePainter(),
+            foregroundPainter: TrianglePainter(color: kSecondaryColor.shade20),
             child: Container(),
           ),
           Positioned(
@@ -96,25 +97,4 @@ class _HomeHeader extends StatelessWidget {
       ),
     );
   }
-}
-
-class _TrianglePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final painter = Paint()
-      ..color = kSecondaryColor.shade20
-      ..style = PaintingStyle.fill;
-
-    final path = Path()
-      ..moveTo(65, size.height)
-      ..lineTo(size.width, size.height)
-      ..lineTo(size.width, 39)
-      ..lineTo(65, size.height)
-      ..close();
-
-    canvas.drawPath(path, painter);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

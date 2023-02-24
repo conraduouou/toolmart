@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/bottom_navbar.dart';
 import 'package:toolmart/components/item_card.dart';
+import 'package:toolmart/components/toolmart_back_button.dart';
+import 'package:toolmart/components/toolmart_divider.dart';
+import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/constants.dart';
 
 class UserScreen extends StatelessWidget {
@@ -54,7 +56,7 @@ class _UserScreenBody extends StatelessWidget {
               color: kSecondaryColor.shade40,
             ),
           ),
-          const _UserScreenDivider(),
+          const ToolMartDivider(height: 104),
           Text(
             'Items bought',
             style: kTitleStyle.copyWith(
@@ -79,25 +81,6 @@ class _UserScreenBody extends StatelessWidget {
   }
 }
 
-class _UserScreenDivider extends StatelessWidget {
-  const _UserScreenDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 80),
-      alignment: Alignment.center,
-      child: const Divider(
-        height: 104,
-        thickness: 1,
-        color: Color(
-          0xFFEBEBEB,
-        ),
-      ),
-    );
-  }
-}
-
 class _UserHeader extends StatelessWidget {
   const _UserHeader();
 
@@ -109,19 +92,14 @@ class _UserHeader extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           CustomPaint(
-            painter: _TrianglePainter(),
+            painter: TrianglePainter(color: kPrimaryColor.shade40),
             willChange: false,
             child: Container(),
           ),
-          Positioned(
+          const Positioned(
             left: 32,
             bottom: 98,
-            child: Container(
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.white),
-              padding: const EdgeInsets.all(15),
-              child: SvgPicture.asset('assets/icons/ic-arrow.svg'),
-            ),
+            child: ToolMartBackButton(),
           ),
           Positioned(
             left: 22,
@@ -139,25 +117,4 @@ class _UserHeader extends StatelessWidget {
       ),
     );
   }
-}
-
-class _TrianglePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final painter = Paint()
-      ..color = kPrimaryColor.shade40
-      ..style = PaintingStyle.fill;
-
-    final path = Path()
-      ..moveTo(65, size.height)
-      ..lineTo(size.width, size.height)
-      ..lineTo(size.width, 16)
-      ..lineTo(65, size.height)
-      ..close();
-
-    canvas.drawPath(path, painter);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

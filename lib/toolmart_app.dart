@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/landing_routes.dart';
-import 'package:toolmart/screens/user/user_screen.dart';
+import 'package:toolmart/screens/item/item_screen.dart';
 
 class ToolMartApp extends StatelessWidget {
   const ToolMartApp({super.key});
@@ -21,7 +21,7 @@ class ToolMartApp extends StatelessWidget {
         ),
       ),
       title: 'ToolMart',
-      initialRoute: UserScreen.id,
+      initialRoute: ItemScreen.id,
       routes: LandingRoutes.routes,
       onGenerateRoute: LandingRoutes.onGenerateRoute,
     );
