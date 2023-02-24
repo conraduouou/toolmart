@@ -13,30 +13,33 @@ class HomeBody extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       slivers: [
         const SliverToBoxAdapter(child: _HomeHeader()),
-        const SliverToBoxAdapter(child: SizedBox(height: 20)),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              Text(
-                'All items',
-                style: kTitleStyle.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: kNeutralColor.shade30,
-                ),
-              ),
-              const SizedBox(height: 20),
-              for (int i = 0; i < 10; i += 2)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      for (int j = i; j < i + 2; j++) const _ItemCard(),
-                    ],
+        SliverToBoxAdapter(
+          child: Container(
+            color: Colors.white,
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'All items',
+                  style: kTitleStyle.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: kNeutralColor.shade30,
                   ),
                 ),
-            ]),
+                const SizedBox(height: 20),
+                for (int i = 0; i < 10; i += 2)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 25),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        for (int j = i; j < i + 2; j++) const _ItemCard(),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/screens/home/home_body.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,10 +12,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: const Scaffold(
-        backgroundColor: Colors.white,
-        bottomNavigationBar: _HomeNavBar(),
-        body: HomeBody(),
+      child: Scaffold(
+        backgroundColor: kSecondaryColor.shade40,
+        bottomNavigationBar: const _HomeNavBar(),
+        body: const HomeBody(),
       ),
     );
   }
