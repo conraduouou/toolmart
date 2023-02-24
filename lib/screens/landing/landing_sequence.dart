@@ -23,7 +23,7 @@ class _LandingSequenceState extends State<LandingSequence> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      _delayOnNext();
+      _delayOnNext(0);
     });
   }
 
@@ -33,9 +33,8 @@ class _LandingSequenceState extends State<LandingSequence> {
     super.dispose();
   }
 
-  Future<void> _delayOnNext() async {
+  Future<void> _delayOnNext(int page) async {
     await Future.delayed(const Duration(seconds: 3));
-
     controller.nextPage(
       duration: _nextPageDuration,
       curve: Curves.easeOutCubic,
@@ -45,24 +44,38 @@ class _LandingSequenceState extends State<LandingSequence> {
   void _onPageChanged(int page, BuildContext context) async {
     final activePageNotifier = context.read<ValueNotifier<int>>();
     activePageNotifier.value = page;
-    if (page < 2) await _delayOnNext();
+
+    // Show login after a 3-second delay when current page is 1
+    if (page == 1) {
+      await Future.delayed(const Duration(seconds: 3));
+      activePageNotifier.value++;
+      return;
+    }
+
+    if (page < 2) await _delayOnNext(page);
   }
 
   @override
   Widget build(BuildContext context) {
+    final notifier = context.watch<ValueNotifier<int>>();
+
     return Stack(
       children: [
         Align(
           alignment: Alignment.center,
-          child: SizedBox(
-            height: _imgHeight,
-            child: PageView.builder(
-              controller: controller,
-              onPageChanged: (page) => _onPageChanged(page, context),
-              itemBuilder: (context, index) => index < 2
-                  ? _LandingIllustration(page: index)
-                  : const LoginElements(),
-            ),
+          child: AnimatedSwitcher(
+            duration: _nextPageDuration,
+            child: notifier.value < 2
+                ? SizedBox(
+                    height: _imgHeight,
+                    child: PageView.builder(
+                      controller: controller,
+                      onPageChanged: (page) => _onPageChanged(page, context),
+                      itemBuilder: (context, index) =>
+                          _LandingIllustration(page: index),
+                    ),
+                  )
+                : const LoginElements(),
           ),
         ),
         const _LandingProgress(),

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
+import 'package:toolmart/components/toolmart_button.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/constants.dart';
 
@@ -28,6 +29,16 @@ class LoginElements extends StatelessWidget {
           const ToolMartTextfield(
             hintText: 'Password',
             fieldType: ToolMartFieldType.password,
+          ),
+          const SizedBox(height: 42),
+          ToolMartButton.primary(
+            text: 'Login',
+            width: 224,
+          ),
+          const SizedBox(height: 23),
+          ToolMartButton.secondary(
+            text: 'Forgot Password',
+            width: 224,
           ),
         ],
       ),
