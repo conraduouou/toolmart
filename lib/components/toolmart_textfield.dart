@@ -20,6 +20,7 @@ class ToolMartTextfield extends StatefulWidget {
     this.hintText,
     this.fieldType,
     this.focusNode,
+    this.backgroundColor,
   });
 
   final double? height;
@@ -30,6 +31,7 @@ class ToolMartTextfield extends StatefulWidget {
   final String? hintText;
   final ToolMartFieldType? fieldType;
   final FocusNode? focusNode;
+  final Color? backgroundColor;
 
   @override
   State<ToolMartTextfield> createState() => _ToolMartTextfieldState();
@@ -74,6 +76,9 @@ class _ToolMartTextfieldState extends State<ToolMartTextfield> {
               height: widget.height ?? _height,
               width: widget.width,
               padding: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                  color: widget.backgroundColor,
+                  borderRadius: BorderRadius.circular(12)),
               child: Row(
                 children: [
                   Expanded(

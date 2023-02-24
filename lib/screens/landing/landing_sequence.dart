@@ -17,13 +17,16 @@ class _LandingSequenceState extends State<LandingSequence> {
   static const _nextPageDuration = Duration(milliseconds: 500);
   static const _imgHeight = 380.0;
 
-  PageController controller = PageController();
+  late PageController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = PageController();
+
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      _delayOnNext(0);
+      // uncomment for Prod
+      // _delayOnNext(0);
     });
   }
 

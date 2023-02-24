@@ -1,3 +1,3 @@
 # toolmart
 
-An e-commerce app made for complying ADET requirements.
+An e-commerce app made in compliance with ADET requirements.
