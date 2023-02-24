@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/control_button.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
+import 'package:toolmart/components/toolmart_minimal_field.dart';
 import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/constants.dart';
 
@@ -13,18 +15,21 @@ class ItemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kTertiaryColor.shade70,
-      body: const CustomScrollView(
-        physics: BouncingScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: _ItemScreenHeader(),
-          ),
-          SliverToBoxAdapter(
-            child: _ItemScreenBody(),
-          )
-        ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: kTertiaryColor.shade70,
+        body: const CustomScrollView(
+          physics: BouncingScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: _ItemScreenHeader(),
+            ),
+            SliverToBoxAdapter(
+              child: _ItemScreenBody(),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -109,6 +114,25 @@ class _ItemScreenBody extends StatelessWidget {
             ],
           ),
           const ToolMartDivider(height: 80),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (int i = 0; i < 5; i++)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Opacity(
+                      opacity: 0.2,
+                      child: SvgPicture.asset('assets/icons/ic-star.svg',
+                          width: 43),
+                    ),
+                    i < 5 ? const SizedBox(width: 15) : Container()
+                  ],
+                ),
+            ],
+          ),
+          const SizedBox(height: 25),
+          const ToolMartMinimalField(hintText: 'Leave a review'),
         ],
       ),
     );
