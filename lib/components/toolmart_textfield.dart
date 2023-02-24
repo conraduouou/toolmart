@@ -70,12 +70,12 @@ class _ToolMartTextfieldState extends State<ToolMartTextfield> {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onTap: () => _focusNode.requestFocus(),
-            child: SizedBox(
+            child: Container(
               height: widget.height ?? _height,
               width: widget.width,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Row(
                 children: [
-                  const SizedBox(width: 15),
                   Expanded(
                     child: TextField(
                       controller: _controller,
@@ -107,8 +107,9 @@ class _ToolMartTextfieldState extends State<ToolMartTextfield> {
                       : Container(),
                   widget.fieldType == ToolMartFieldType.password
                       ? _ViewPasswordButton(
-                          onTap: () =>
-                              setState(() => _isObscured = !_isObscured),
+                          onTap: () {
+                            setState(() => _isObscured = !_isObscured);
+                          },
                         )
                       : Container(),
                 ],
@@ -146,11 +147,14 @@ class _ViewPasswordButton extends StatelessWidget {
       hoverColor: Colors.transparent,
       splashColor: Colors.transparent,
       onTap: onTap,
-      child: SvgPicture.asset(
-        'assets/icons/ic-password-view.svg',
-        colorFilter: ColorFilter.mode(
-          kNeutralVariant.shade80,
-          BlendMode.color,
+      child: SizedBox(
+        child: SvgPicture.asset(
+          'assets/icons/ic-password-view.svg',
+          height: 24,
+          colorFilter: ColorFilter.mode(
+            kNeutralVariant.shade80,
+            BlendMode.srcATop,
+          ),
         ),
       ),
     );
