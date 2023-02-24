@@ -114,27 +114,92 @@ class _ItemScreenBody extends StatelessWidget {
             ],
           ),
           const ToolMartDivider(height: 80),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (int i = 0; i < 5; i++)
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Opacity(
-                      opacity: 0.2,
-                      child: SvgPicture.asset('assets/icons/ic-star.svg',
-                          width: 43),
-                    ),
-                    i < 5 ? const SizedBox(width: 15) : Container()
-                  ],
-                ),
-            ],
-          ),
+          const _RatingControls(),
           const SizedBox(height: 25),
           const ToolMartMinimalField(hintText: 'Leave a review'),
+          const SizedBox(height: 40),
+          for (int i = 0; i < 5; i++)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: const [_Review(), SizedBox(height: 16)],
+            ),
         ],
       ),
+    );
+  }
+}
+
+class _Review extends StatelessWidget {
+  const _Review();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          height: 45,
+          width: 45,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color(0xFFD9D9D9),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '3.5',
+                    style: kLabelStyle.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: kTertiaryColor.shade70,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  SvgPicture.asset('assets/icons/ic-star.svg', width: 7),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'What a great item!',
+                style: kLabelStyle.copyWith(
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RatingControls extends StatelessWidget {
+  const _RatingControls();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (int i = 0; i < 5; i++)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Opacity(
+                opacity: 0.2,
+                child: SvgPicture.asset('assets/icons/ic-star.svg', width: 43),
+              ),
+              i < 5 ? const SizedBox(width: 15) : Container()
+            ],
+          ),
+      ],
     );
   }
 }
