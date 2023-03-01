@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
-import 'package:toolmart/components/control_button.dart';
+import 'package:toolmart/components/toolmart_control_button.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/toolmart_minimal_field.dart';
 import 'package:toolmart/components/triangle_painter.dart';
+import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
 
 class ItemScreen extends StatelessWidget {
@@ -19,14 +20,41 @@ class ItemScreen extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: kTertiaryColor.shade70,
-        body: const CustomScrollView(
-          physics: BouncingScrollPhysics(),
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
-            SliverToBoxAdapter(
-              child: _ItemScreenHeader(),
+            const SliverToBoxAdapter(child: _ItemScreenHeader()),
+            const SliverToBoxAdapter(child: _ItemScreenDetails()),
+            const SliverToBoxAdapter(
+              child: UtilityContainer(
+                color: Colors.white,
+                child: ToolMartDivider(height: 80),
+              ),
             ),
             SliverToBoxAdapter(
-              child: _ItemScreenBody(),
+              child: UtilityContainer(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    _RatingControls(),
+                    SizedBox(height: 25),
+                    ToolMartMinimalField(hintText: 'Leave a review'),
+                  ],
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: UtilityContainer(height: 40)),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return const UtilityContainer(
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
+                    child: _Review(),
+                  );
+                },
+                childCount: 4,
+              ),
             )
           ],
         ),
@@ -66,14 +94,13 @@ class _ItemScreenHeader extends StatelessWidget {
   }
 }
 
-class _ItemScreenBody extends StatelessWidget {
-  const _ItemScreenBody();
+class _ItemScreenDetails extends StatelessWidget {
+  const _ItemScreenDetails();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      color: Colors.white,
+    return UtilityContainer(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -113,16 +140,6 @@ class _ItemScreenBody extends StatelessWidget {
               _QuantityControls(),
             ],
           ),
-          const ToolMartDivider(height: 80),
-          const _RatingControls(),
-          const SizedBox(height: 25),
-          const ToolMartMinimalField(hintText: 'Leave a review'),
-          const SizedBox(height: 40),
-          for (int i = 0; i < 5; i++)
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: const [_Review(), SizedBox(height: 16)],
-            ),
         ],
       ),
     );
@@ -230,7 +247,7 @@ class _QuantityControls extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const ControlButton.minus(),
+        const ToolMartControlButton.minus(),
         const SizedBox(width: 30),
         SizedBox(
           height: 32,
@@ -246,7 +263,7 @@ class _QuantityControls extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 30),
-        const ControlButton.plus(),
+        const ToolMartControlButton.plus(),
       ],
     );
   }

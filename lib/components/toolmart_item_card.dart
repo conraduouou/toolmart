@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/constants.dart';
 
-class ItemCard extends StatelessWidget {
-  const ItemCard({super.key});
+class ToolMartItemCard extends StatelessWidget {
+  const ToolMartItemCard({super.key});
 
   static const height = 201.0;
   static const width = 165.0;

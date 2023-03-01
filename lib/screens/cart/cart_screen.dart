@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
-import 'package:toolmart/components/cart_item.dart';
-import 'package:toolmart/components/item_card.dart';
-import 'package:toolmart/components/sticky_button.dart';
+import 'package:toolmart/components/toolmart_cart_item.dart';
+import 'package:toolmart/components/toolmart_item_card.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
+import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/screens/home/home_screen.dart';
 
@@ -20,7 +20,7 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: const StickyButton(text: 'Checkout'),
+      bottomNavigationBar: const ToolMartStickyButton(text: 'Checkout'),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -53,13 +53,14 @@ class CartScreen extends StatelessWidget {
             ]),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 60)),
-          SliverList(
+          SliverFixedExtentList(
+            itemExtent: ToolMartCartItem.height + 12,
             delegate: SliverChildListDelegate([
               for (int i = 0; i < 4; i++)
                 Column(
-                  children: [
-                    const CartItem(),
-                    i < 3 ? const SizedBox(height: 12) : Container(),
+                  children: const [
+                    ToolMartCartItem(),
+                    SizedBox(height: 12),
                   ],
                 ),
             ]),
@@ -81,7 +82,7 @@ class CartScreen extends StatelessWidget {
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             sliver: SliverFixedExtentList(
-              itemExtent: ItemCard.height + 25,
+              itemExtent: ToolMartItemCard.height + 25,
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   final trueIndex = index * 2;
@@ -90,7 +91,7 @@ class CartScreen extends StatelessWidget {
                   for (int i = trueIndex;
                       i < trueIndex + 2 && i < _itemCount;
                       i++) {
-                    items.add(const ItemCard());
+                    items.add(const ToolMartItemCard());
                   }
 
                   return Column(

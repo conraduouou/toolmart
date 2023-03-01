@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/constants.dart';
 
-class StickyButton extends StatelessWidget {
-  const StickyButton({
+class ToolMartStickyButton extends StatelessWidget {
+  const ToolMartStickyButton({
     super.key,
     this.onTap,
     required this.text,

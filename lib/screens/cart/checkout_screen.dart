@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
-import 'package:toolmart/components/cart_item.dart';
-import 'package:toolmart/components/sticky_button.dart';
+import 'package:toolmart/components/toolmart_cart_item.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_radio_button.dart';
+import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/screens/cart/cart_screen.dart';
@@ -22,7 +22,7 @@ class CheckoutScreen extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Colors.white,
-        bottomNavigationBar: const StickyButton(text: 'Pay'),
+        bottomNavigationBar: const ToolMartStickyButton(text: 'Pay'),
         body: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
@@ -55,13 +55,14 @@ class CheckoutScreen extends StatelessWidget {
               ]),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 60)),
-            SliverList(
+            SliverFixedExtentList(
+              itemExtent: ToolMartCartItem.height + 12,
               delegate: SliverChildListDelegate([
                 for (int i = 0; i < 4; i++)
                   Column(
-                    children: [
-                      const CartItem(),
-                      i < 3 ? const SizedBox(height: 12) : Container(),
+                    children: const [
+                      ToolMartCartItem(),
+                      SizedBox(height: 12),
                     ],
                   ),
               ]),

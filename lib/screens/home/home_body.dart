@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
-import 'package:toolmart/components/item_card.dart';
+import 'package:toolmart/components/toolmart_item_card.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/components/triangle_painter.dart';
+import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
 
 class HomeBody extends StatelessWidget {
@@ -16,34 +17,37 @@ class HomeBody extends StatelessWidget {
       slivers: [
         const SliverToBoxAdapter(child: _HomeHeader()),
         SliverToBoxAdapter(
-          child: Container(
-            color: Colors.white,
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'All items',
-                  style: kTitleStyle.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: kNeutralColor.shade30,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                for (int i = 0; i < 10; i += 2)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        for (int j = i; j < i + 2; j++) const ItemCard(),
-                      ],
-                    ),
-                  ),
-              ],
+          child: UtilityContainer(
+            padding: const EdgeInsets.all(20),
+            child: Text(
+              'All items',
+              style: kTitleStyle.copyWith(
+                fontWeight: FontWeight.bold,
+                color: kNeutralColor.shade30,
+              ),
             ),
           ),
         ),
+        SliverFixedExtentList(
+          itemExtent: ToolMartItemCard.height + 25,
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final actualIndex = index * 2;
+
+              return UtilityContainer(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    for (int j = actualIndex; j < actualIndex + 2 && j < 9; j++)
+                      const ToolMartItemCard(),
+                  ],
+                ),
+              );
+            },
+            childCount: (9 / 2).ceil(),
+          ),
+        )
       ],
     );
   }

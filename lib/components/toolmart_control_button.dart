@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
 
-class ControlButton extends StatelessWidget {
-  const ControlButton({
+class ToolMartControlButton extends StatelessWidget {
+  const ToolMartControlButton({
     super.key,
     this.onTap,
     required this.assetPath,
@@ -18,7 +18,7 @@ class ControlButton extends StatelessWidget {
   final Color? color;
   final List<BoxShadow>? boxShadow;
 
-  const ControlButton.minus({
+  const ToolMartControlButton.minus({
     super.key,
     this.onTap,
     this.assetPath = 'assets/icons/ic-minus.svg',
@@ -27,7 +27,7 @@ class ControlButton extends StatelessWidget {
     this.boxShadow,
   });
 
-  const ControlButton.plus({
+  const ToolMartControlButton.plus({
     super.key,
     this.onTap,
     this.assetPath = 'assets/icons/ic-plus.svg',
@@ -36,7 +36,7 @@ class ControlButton extends StatelessWidget {
     this.boxShadow,
   });
 
-  ControlButton.error({
+  ToolMartControlButton.error({
     super.key,
     this.onTap,
     this.assetPath = 'assets/icons/ic-cross.svg',

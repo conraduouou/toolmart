@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
-import 'package:toolmart/components/bottom_navbar.dart';
-import 'package:toolmart/components/item_card.dart';
+import 'package:toolmart/components/toolmart_navbar.dart';
+import 'package:toolmart/components/toolmart_item_card.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/triangle_painter.dart';
@@ -16,7 +16,7 @@ class UserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColor.shade60,
-      bottomNavigationBar: const BottomNavBar(),
+      bottomNavigationBar: const ToolMartNavBar(),
       body: const CustomScrollView(
         physics: BouncingScrollPhysics(),
         slivers: [
@@ -71,7 +71,7 @@ class _UserScreenBody extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  for (int j = i; j < i + 2; j++) const ItemCard(),
+                  for (int j = i; j < i + 2; j++) const ToolMartItemCard(),
                 ],
               ),
             ),
