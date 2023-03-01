@@ -56,9 +56,10 @@ class _SkipText extends StatelessWidget {
         highlightColor: Colors.transparent,
         hoverColor: Colors.transparent,
         splashColor: Colors.transparent,
+        // this callback updates UI in landing_sequence.dart
         onTap: () => notifier.value = 2,
         child: Text(
-          'Skip',
+          notifier.value >= 1 ? 'Continue' : 'Skip',
           style: kBodyStyle.copyWith(
             color: kSecondaryColor.shade40,
           ),
