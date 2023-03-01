@@ -15,7 +15,7 @@ class LandingSequence extends StatefulWidget {
 
 class _LandingSequenceState extends State<LandingSequence> {
   static const _nextPageDuration = Duration(milliseconds: 500);
-  static const _imgHeight = 380.0;
+  static const imgHeight = 380.0;
 
   late PageController controller;
 
@@ -55,7 +55,7 @@ class _LandingSequenceState extends State<LandingSequence> {
     );
   }
 
-  void _onPageChanged(int page, BuildContext context) async {
+  void onPageChanged(int page, BuildContext context) async {
     final activePageNotifier = context.read<ValueNotifier<int>>();
     activePageNotifier.value = page;
     await _delayOnNext(page, context);
@@ -63,7 +63,20 @@ class _LandingSequenceState extends State<LandingSequence> {
 
   @override
   Widget build(BuildContext context) {
+    return Provider.value(
+      value: this,
+      child: const _LandingSequenceBody(),
+    );
+  }
+}
+
+class _LandingSequenceBody extends StatelessWidget {
+  const _LandingSequenceBody();
+
+  @override
+  Widget build(BuildContext context) {
     final notifier = context.watch<ValueNotifier<int>>();
+    final state = context.watch<_LandingSequenceState>();
     final size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
@@ -79,12 +92,12 @@ class _LandingSequenceState extends State<LandingSequence> {
                 child: notifier.value == 2
                     ? const LoginElements()
                     : SizedBox(
-                        height: _imgHeight,
+                        height: _LandingSequenceState.imgHeight,
                         child: PageView.builder(
-                          controller: controller,
+                          controller: state.controller,
                           itemCount: 2,
                           onPageChanged: (page) =>
-                              _onPageChanged(page, context),
+                              state.onPageChanged(page, context),
                           itemBuilder: (context, index) =>
                               _LandingIllustration(page: index),
                         ),
