@@ -14,6 +14,7 @@ class LandingScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: ChangeNotifierProvider(
+        // this created ValueNotifier is the active page notifier
         create: (_) => ValueNotifier(0),
         builder: (_, child) {
           return Scaffold(
@@ -50,10 +51,17 @@ class _SkipText extends StatelessWidget {
     return AnimatedOpacity(
       opacity: notifier.value == 2 ? 0 : 1, // when page shows LoginElements
       duration: _toLoginAnimation,
-      child: Text(
-        'Skip',
-        style: kBodyStyle.copyWith(
-          color: kSecondaryColor.shade40,
+      child: InkWell(
+        focusColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        onTap: () => notifier.value = 2,
+        child: Text(
+          'Skip',
+          style: kBodyStyle.copyWith(
+            color: kSecondaryColor.shade40,
+          ),
         ),
       ),
     );

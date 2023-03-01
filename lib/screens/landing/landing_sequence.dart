@@ -25,8 +25,7 @@ class _LandingSequenceState extends State<LandingSequence> {
     controller = PageController();
 
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      // uncomment for Prod
-      // _delayOnNext(0);
+      _delayOnNext(0, context);
     });
   }
 
@@ -36,8 +35,18 @@ class _LandingSequenceState extends State<LandingSequence> {
     super.dispose();
   }
 
-  Future<void> _delayOnNext(int page) async {
+  /// A delay function that tells the page controller to go to the next page
+  /// as long as the active page via the ValueNotifier is not at 1 or 2.
+  Future<void> _delayOnNext(int page, BuildContext context) async {
+    // make sure to get the notifier before the asynchronous gap
+    final activePageNotifier = context.read<ValueNotifier<int>>();
+
     await Future.delayed(const Duration(seconds: 3));
+
+    // check activePage value after the delay for relevant change.
+    // if activePage equals to 1 or higher, cancel controller transition.
+    if (activePageNotifier.value >= 1) return;
+
     controller.nextPage(
       duration: _nextPageDuration,
       curve: Curves.easeOutCubic,
@@ -47,15 +56,7 @@ class _LandingSequenceState extends State<LandingSequence> {
   void _onPageChanged(int page, BuildContext context) async {
     final activePageNotifier = context.read<ValueNotifier<int>>();
     activePageNotifier.value = page;
-
-    // Show login after a 3-second delay when current page is 1
-    if (page == 1) {
-      await Future.delayed(const Duration(seconds: 3));
-      activePageNotifier.value++;
-      return;
-    }
-
-    if (page < 2) await _delayOnNext(page);
+    await _delayOnNext(page, context);
   }
 
   @override
@@ -73,18 +74,19 @@ class _LandingSequenceState extends State<LandingSequence> {
               alignment: Alignment.center,
               child: AnimatedSwitcher(
                 duration: const Duration(seconds: 1),
-                child: notifier.value < 2
-                    ? SizedBox(
+                child: notifier.value == 2
+                    ? const LoginElements()
+                    : SizedBox(
                         height: _imgHeight,
                         child: PageView.builder(
                           controller: controller,
+                          itemCount: 2,
                           onPageChanged: (page) =>
                               _onPageChanged(page, context),
                           itemBuilder: (context, index) =>
                               _LandingIllustration(page: index),
                         ),
-                      )
-                    : const LoginElements(),
+                      ),
               ),
             ),
             const _LandingProgress(),
@@ -144,12 +146,19 @@ class _LandingProgress extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return AnimatedPositioned(
-      bottom: notifier.value == 2 ? 20 : 80, // when page shows LoginElements
+      bottom: notifier.value == 2 ? 20 : 80,
       duration: _toLoginAnimation,
       curve: Curves.easeOutCubic,
-      child: SizedBox(
-        width: size.width,
-        child: _LandingProgressDots(activePage: notifier.value),
+      child: AnimatedOpacity(
+        opacity: notifier.value == 2 ? 0 : 1,
+        duration: _toLoginAnimation,
+        curve: Curves.easeOutCubic,
+        child: SizedBox(
+          width: size.width,
+          child: _LandingProgressDots(
+            activePage: notifier.value == 2 ? 1 : notifier.value,
+          ),
+        ),
       ),
     );
   }
@@ -170,8 +179,6 @@ class _LandingProgressDots extends StatelessWidget {
         _LandingProgressDot(isActive: activePage == 0),
         const SizedBox(width: 15),
         _LandingProgressDot(isActive: activePage == 1),
-        const SizedBox(width: 15),
-        _LandingProgressDot(isActive: activePage == 2),
       ],
     );
   }
