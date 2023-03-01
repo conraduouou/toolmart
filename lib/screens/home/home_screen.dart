@@ -2,25 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/toolmart_item_card.dart';
-import 'package:toolmart/components/toolmart_navbar.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
+import 'package:toolmart/screens/home/dashboard_overlay.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  static const id = '/home';
+  static const id = '${DashboardOverlay.id}/home';
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: kSecondaryColor.shade40,
-        bottomNavigationBar: const ToolMartNavBar(),
-        body: const _HomeScreenBody(),
+      child: ColoredBox(
+        color: kSecondaryColor.shade40,
+        child: const _HomeScreenBody(),
       ),
     );
   }

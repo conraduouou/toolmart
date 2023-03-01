@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
-import 'package:toolmart/components/toolmart_navbar.dart';
 import 'package:toolmart/components/toolmart_item_card.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
@@ -15,10 +14,9 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kPrimaryColor.shade60,
-      bottomNavigationBar: const ToolMartNavBar(),
-      body: CustomScrollView(
+    return ColoredBox(
+      color: kPrimaryColor.shade60,
+      child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           const SliverToBoxAdapter(child: _UserScreenHeader()),

@@ -6,12 +6,12 @@ import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/constants.dart';
-import 'package:toolmart/screens/home/home_screen.dart';
+import 'package:toolmart/screens/home/dashboard_overlay.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
-  static const id = '${HomeScreen.id}/cart';
+  static const id = '${DashboardOverlay.id}/cart';
   static const _itemCount = 11;
 
   @override

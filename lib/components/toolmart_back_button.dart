@@ -19,7 +19,7 @@ class ToolMartBackButton extends StatelessWidget {
       highlightColor: Colors.transparent,
       hoverColor: Colors.transparent,
       splashColor: Colors.transparent,
-      onTap: () => Navigator.of(context).pop(context),
+      onTap: () => Navigator.of(context).maybePop(),
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
