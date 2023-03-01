@@ -48,7 +48,7 @@ class _ItemScreenHeader extends StatelessWidget {
           CustomPaint(
             painter: TrianglePainter(
               color: kTertiaryColor.shade50,
-              yCor: 210,
+              yMultiplier: 210,
             ),
             willChange: false,
             child: Container(),
