@@ -24,7 +24,7 @@ class _LandingSequenceState extends State<LandingSequence> {
     super.initState();
     controller = PageController();
 
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _delayOnNext(0, context);
     });
   }
@@ -45,6 +45,8 @@ class _LandingSequenceState extends State<LandingSequence> {
 
     // check activePage value after the delay for relevant change.
     // if activePage equals to 1 or higher, cancel controller transition.
+    // the activePageNotifier value can change either by the SkipText callback
+    // (in landing_screen.dart) or by the _onPageChanged callback.
     if (activePageNotifier.value >= 1) return;
 
     controller.nextPage(
