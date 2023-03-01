@@ -5,6 +5,7 @@ import 'package:toolmart/components/toolmart_item_card.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/triangle_painter.dart';
+import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
 
 class UserScreen extends StatelessWidget {
@@ -17,15 +18,29 @@ class UserScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: kPrimaryColor.shade60,
       bottomNavigationBar: const ToolMartNavBar(),
-      body: const CustomScrollView(
-        physics: BouncingScrollPhysics(),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverToBoxAdapter(
-            child: _UserScreenHeader(),
+          const SliverToBoxAdapter(child: _UserScreenHeader()),
+          const SliverToBoxAdapter(child: _UserScreenDetails()),
+          SliverFixedExtentList(
+            itemExtent: ToolMartItemCard.height + 25,
+            delegate: SliverChildListDelegate([
+              for (int i = 0; i < (9 / 2).ceil(); i++)
+                // 9 in this case, the itemCount
+                UtilityContainer(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      for (int j = i * 2, n = j + 2; j < n && j < 9; j++)
+                        const ToolMartItemCard(),
+                    ],
+                  ),
+                ),
+            ]),
           ),
-          SliverToBoxAdapter(
-            child: _UserScreenDetails(),
-          )
+          const SliverToBoxAdapter(child: UtilityContainer(height: 80)),
         ],
       ),
     );
@@ -37,7 +52,7 @@ class _UserScreenDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return UtilityContainer(
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(20, 67, 20, 0),
       child: Column(
@@ -65,16 +80,6 @@ class _UserScreenDetails extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          for (int i = 0; i < 10; i += 2)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  for (int j = i; j < i + 2; j++) const ToolMartItemCard(),
-                ],
-              ),
-            ),
         ],
       ),
     );
