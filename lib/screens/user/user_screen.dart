@@ -21,10 +21,10 @@ class UserScreen extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         slivers: [
           SliverToBoxAdapter(
-            child: _UserHeader(),
+            child: _UserScreenHeader(),
           ),
           SliverToBoxAdapter(
-            child: _UserScreenBody(),
+            child: _UserScreenDetails(),
           )
         ],
       ),
@@ -32,8 +32,8 @@ class UserScreen extends StatelessWidget {
   }
 }
 
-class _UserScreenBody extends StatelessWidget {
-  const _UserScreenBody();
+class _UserScreenDetails extends StatelessWidget {
+  const _UserScreenDetails();
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +81,8 @@ class _UserScreenBody extends StatelessWidget {
   }
 }
 
-class _UserHeader extends StatelessWidget {
-  const _UserHeader();
+class _UserScreenHeader extends StatelessWidget {
+  const _UserScreenHeader();
 
   @override
   Widget build(BuildContext context) {
