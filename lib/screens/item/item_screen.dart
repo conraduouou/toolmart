@@ -5,6 +5,7 @@ import 'package:toolmart/components/toolmart_control_button.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/toolmart_minimal_field.dart';
+import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
@@ -20,6 +21,7 @@ class ItemScreen extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: kTertiaryColor.shade70,
+        bottomNavigationBar: const ToolMartStickyButton(text: 'Add to Cart'),
         body: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
@@ -55,7 +57,8 @@ class ItemScreen extends StatelessWidget {
                 },
                 childCount: 4,
               ),
-            )
+            ),
+            const SliverToBoxAdapter(child: UtilityContainer(height: 80))
           ],
         ),
       ),
