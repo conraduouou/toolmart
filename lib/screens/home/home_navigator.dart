@@ -50,15 +50,36 @@ class HomeNavigator extends StatelessWidget {
     );
   }
 
+  Future<bool> _onWillPop() async {
+    final context = homeNavKey.currentContext!;
+    final notifier = context.read<ValueNotifier<int>>(); // home page notifier
+    final navigator = Navigator.of(context);
+
+    if (navigator.canPop()) {
+      navigator.maybePop();
+      return false;
+    }
+
+    if (notifier.value != 0) {
+      notifier.value = 0;
+      return false;
+    }
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       // page notifier for HomeOverlay
       create: (context) => ValueNotifier<int>(0),
-      child: Navigator(
-        key: homeNavKey,
-        onGenerateRoute: onGenerateRoute,
-        initialRoute: HomeScreen.id,
+      child: WillPopScope(
+        onWillPop: _onWillPop,
+        child: Navigator(
+          key: homeNavKey,
+          onGenerateRoute: onGenerateRoute,
+          initialRoute: HomeScreen.id,
+        ),
       ),
     );
   }

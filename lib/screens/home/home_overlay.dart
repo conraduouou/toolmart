@@ -34,37 +34,19 @@ class _HomeOverlayState extends State<HomeOverlay> {
   void setPage(int index, ValueNotifier<int> notifier) =>
       notifier.value = index;
 
-  Future<bool> _onWillPop(ValueNotifier<int> notifier) async {
-    final navigator = Navigator.of(context);
-
-    if (navigator.canPop()) {
-      if (notifier.value != 0) {
-        notifier.value = 0;
-        return false;
-      }
-
-      navigator.maybePop();
-    }
-
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final activePageNotifier = context.watch<ValueNotifier<int>>();
 
-    return WillPopScope(
-      onWillPop: () => _onWillPop(activePageNotifier),
-      child: Scaffold(
-        bottomNavigationBar: ToolMartNavBar(
-          activePage: activePageNotifier.value,
-          onHomeTap: () => setPage(0, activePageNotifier),
-          onUserTap: () => setPage(1, activePageNotifier),
-        ),
-        body: IndexedStack(
-          index: activePageNotifier.value,
-          children: pages,
-        ),
+    return Scaffold(
+      bottomNavigationBar: ToolMartNavBar(
+        activePage: activePageNotifier.value,
+        onHomeTap: () => setPage(0, activePageNotifier),
+        onUserTap: () => setPage(1, activePageNotifier),
+      ),
+      body: IndexedStack(
+        index: activePageNotifier.value,
+        children: pages,
       ),
     );
   }
