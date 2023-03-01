@@ -42,17 +42,18 @@ class ItemScreen extends StatelessWidget {
                     _RatingControls(),
                     SizedBox(height: 25),
                     ToolMartMinimalField(hintText: 'Leave a review'),
+                    SizedBox(height: 40),
                   ],
                 ),
               ),
             ),
-            const SliverToBoxAdapter(child: UtilityContainer(height: 40)),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  return const UtilityContainer(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
-                    child: _Review(),
+                  return UtilityContainer(
+                    padding:
+                        EdgeInsets.fromLTRB(20, index == 0 ? 5 : 0, 20, 16),
+                    child: const _Review(),
                   );
                 },
                 childCount: 4,
@@ -154,48 +155,59 @@ class _Review extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          height: 45,
-          width: 45,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Color(0xFFD9D9D9),
+    final size = MediaQuery.of(context).size;
+
+    return SizedBox(
+      width: size.width - 40,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 45,
+            width: 45,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFFD9D9D9),
+            ),
           ),
-        ),
-        const SizedBox(width: 10),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+          const SizedBox(width: 10),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    '3.5',
-                    style: kLabelStyle.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: kTertiaryColor.shade70,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '3.5',
+                        style: kLabelStyle.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: kTertiaryColor.shade70,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      SvgPicture.asset('assets/icons/ic-star.svg', width: 7),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Flexible(
+                    child: Text(
+                      'What a great item!',
+                      style: kLabelStyle.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  SvgPicture.asset('assets/icons/ic-star.svg', width: 7),
                 ],
               ),
-              const SizedBox(height: 5),
-              Text(
-                'What a great item!',
-                style: kLabelStyle.copyWith(
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
