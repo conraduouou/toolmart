@@ -3,6 +3,9 @@ import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/landing_routes.dart';
 import 'package:toolmart/screens/landing/landing_screen.dart';
 
+final rootNavKey = GlobalKey();
+final homeNavKey = GlobalKey();
+
 class ToolMartApp extends StatelessWidget {
   const ToolMartApp({super.key});
 
@@ -10,6 +13,7 @@ class ToolMartApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      key: rootNavKey,
       color: kPrimaryColor,
       theme: ThemeData(
         splashColor: Colors.transparent,

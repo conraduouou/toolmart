@@ -8,6 +8,7 @@ import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/screens/cart/cart_screen.dart';
+import 'package:toolmart/screens/cart/payment_success_screen.dart';
 
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key});
@@ -22,7 +23,10 @@ class CheckoutScreen extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Colors.white,
-        bottomNavigationBar: const ToolMartStickyButton(text: 'Pay'),
+        bottomNavigationBar: ToolMartStickyButton(
+          text: 'Pay',
+          onTap: () => Navigator.of(context).pushNamed(PaymentSuccessScreen.id),
+        ),
         body: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [

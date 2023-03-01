@@ -6,12 +6,13 @@ import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/constants.dart';
-import 'package:toolmart/screens/home/dashboard_overlay.dart';
+import 'package:toolmart/screens/cart/checkout_screen.dart';
+import 'package:toolmart/screens/home/home_overlay.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
-  static const id = '${DashboardOverlay.id}/cart';
+  static const id = '${HomeOverlay.id}/cart';
   static const _itemCount = 11;
 
   @override
@@ -20,7 +21,10 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: const ToolMartStickyButton(text: 'Checkout'),
+      bottomNavigationBar: ToolMartStickyButton(
+        text: 'Checkout',
+        onTap: () => Navigator.of(context).pushNamed(CheckoutScreen.id),
+      ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [

@@ -6,6 +6,7 @@ import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/screens/cart/checkout_screen.dart';
 import 'package:toolmart/screens/home/home_screen.dart';
+import 'package:provider/provider.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
   const PaymentSuccessScreen({super.key});
@@ -90,8 +91,13 @@ class PaymentSuccessScreen extends StatelessWidget {
                 textColor: kPrimaryColor.shade60,
                 fontWeight: FontWeight.bold,
                 width: 224,
-                onTap: () => Navigator.of(context)
-                    .popUntil(ModalRoute.withName(HomeScreen.id)),
+                onTap: () {
+                  final homeActivePage = context.read<ValueNotifier<int>>();
+                  homeActivePage.value = 0; // set it to home
+
+                  Navigator.of(context)
+                      .popUntil(ModalRoute.withName(HomeScreen.id));
+                },
               )
             ],
           ),

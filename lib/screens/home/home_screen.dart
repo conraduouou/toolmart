@@ -6,12 +6,12 @@ import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
-import 'package:toolmart/screens/home/dashboard_overlay.dart';
+import 'package:toolmart/screens/home/home_overlay.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  static const id = '${DashboardOverlay.id}/home';
+  static const id = '${HomeOverlay.id}/home';
 
   @override
   Widget build(BuildContext context) {
