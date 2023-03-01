@@ -19,8 +19,8 @@ class TrianglePainter extends CustomPainter {
   /// Determines whether to start at point (0, 0) or at (width, height).
   final bool startAtOrigin;
 
-  static const _defaultX = 0.118;
-  static const _defaultY = 0.22;
+  static const _defaultX = 0.85;
+  static const _defaultY = 0.82;
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -92,7 +92,10 @@ class _UserHeader extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           CustomPaint(
-            painter: TrianglePainter(color: kPrimaryColor.shade40),
+            painter: TrianglePainter(
+              color: kPrimaryColor.shade40,
+              startAtOrigin: false,
+            ),
             willChange: false,
             child: Container(),
           ),

@@ -61,7 +61,10 @@ class _HomeHeader extends StatelessWidget {
       child: Stack(
         children: [
           CustomPaint(
-            foregroundPainter: TrianglePainter(color: kSecondaryColor.shade20),
+            foregroundPainter: TrianglePainter(
+              color: kSecondaryColor.shade20,
+              startAtOrigin: false,
+            ),
             child: Container(),
           ),
           Positioned(
