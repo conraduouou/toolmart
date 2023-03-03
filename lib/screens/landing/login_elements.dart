@@ -4,9 +4,7 @@ import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/toolmart_button.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/constants.dart';
-import 'package:toolmart/models/services/api_service.dart';
 import 'package:toolmart/screens/home/home_screen.dart';
-import 'package:provider/provider.dart';
 
 class LoginElements extends StatelessWidget {
   const LoginElements({super.key});
@@ -43,12 +41,7 @@ class LoginElements extends StatelessWidget {
           ToolMartButton.secondary(
             text: 'Forgot Password',
             width: 224,
-            onTap: () async {
-              print('here');
-              final service = context.read<ApiService>();
-              final response = await service.getTodoById(1);
-              print(response.body);
-            },
+            onTap: () async {},
           ),
         ],
       ),
