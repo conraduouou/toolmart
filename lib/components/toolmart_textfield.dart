@@ -18,6 +18,7 @@ class ToolMartTextfield extends StatefulWidget {
     this.digitsOnly = false,
     this.dateTimeOnly = false,
     this.hintText,
+    this.initialText,
     this.fieldType,
     this.focusNode,
     this.backgroundColor,
@@ -29,6 +30,7 @@ class ToolMartTextfield extends StatefulWidget {
   final bool digitsOnly;
   final bool dateTimeOnly;
   final String? hintText;
+  final String? initialText;
   final ToolMartFieldType? fieldType;
   final FocusNode? focusNode;
   final Color? backgroundColor;
@@ -46,10 +48,22 @@ class _ToolMartTextfieldState extends State<ToolMartTextfield> {
 
   @override
   void initState() {
-    _controller = TextEditingController();
+    _controller = TextEditingController(text: widget.initialText);
     _focusNode = widget.focusNode ?? FocusNode();
     _isObscured = widget.fieldType == ToolMartFieldType.password;
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _controller.text = widget.initialText ?? _controller.text;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(covariant ToolMartTextfield oldWidget) {
+    _controller.text = widget.initialText ?? _controller.text;
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

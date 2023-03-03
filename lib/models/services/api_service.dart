@@ -17,7 +17,7 @@ class ApiService {
 
   /// Get user by email
   Future<http.Response> getUserByEmail(String email) async {
-    Uri getUrl = Uri.https(_apiURL, '/api/Users/$email');
+    Uri getUrl = Uri.https(_apiURL, '/api/users/email/$email');
     http.Response response = await http.get(getUrl);
     return response;
   }

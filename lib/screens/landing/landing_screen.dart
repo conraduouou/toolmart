@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/constants.dart';
+import 'package:toolmart/providers/landing/landing_provider.dart';
 import 'package:toolmart/screens/landing/landing_sequence.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -13,9 +14,12 @@ class LandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: ChangeNotifierProvider(
+      child: MultiProvider(
         // this created ValueNotifier is the active page notifier
-        create: (_) => ValueNotifier(0),
+        providers: [
+          ChangeNotifierProvider(create: (_) => ValueNotifier(0)),
+          ChangeNotifierProvider(create: (_) => LandingProvider())
+        ],
         builder: (_, child) {
           return Scaffold(
             backgroundColor: Colors.white,
