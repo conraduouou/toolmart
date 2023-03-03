@@ -8,9 +8,16 @@ class ApiService {
   static final ApiService _instance = ApiService._();
   static ApiService get service => _instance;
 
-  // Get item by id of length 24
+  /// Get item by id of length 24
   Future<http.Response> getItemById(String id) async {
     Uri getUrl = Uri.https(_apiURL, '/api/items/$id');
+    http.Response response = await http.get(getUrl);
+    return response;
+  }
+
+  /// Get user by email
+  Future<http.Response> getUserByEmail(String email) async {
+    Uri getUrl = Uri.https(_apiURL, '/api/Users/$email');
     http.Response response = await http.get(getUrl);
     return response;
   }
