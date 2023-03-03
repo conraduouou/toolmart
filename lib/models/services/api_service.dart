@@ -8,6 +8,15 @@ class ApiService {
   static final ApiService _instance = ApiService._();
   static ApiService get service => _instance;
 
+  // TODO: make methods depend on userId for simple auth
+
+  /// Get items of length 24
+  Future<http.Response> getItems() async {
+    Uri getUrl = Uri.https(_apiURL, '/api/items');
+    http.Response response = await http.get(getUrl);
+    return response;
+  }
+
   /// Get item by id of length 24
   Future<http.Response> getItemById(String id) async {
     Uri getUrl = Uri.https(_apiURL, '/api/items/$id');

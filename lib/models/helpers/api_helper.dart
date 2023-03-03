@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:toolmart/models/core/item.dart';
 import 'package:toolmart/models/core/user.dart';
 import 'package:toolmart/models/services/api_service.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +10,27 @@ class ApiHelper {
 
   static final _helper = ApiHelper._();
   static ApiHelper get helper => _helper;
+
+  Future<dynamic> getItems() async {
+    final service = ApiService.service;
+    late final http.Response result;
+
+    try {
+      result = await service.getItems();
+      if (result.statusCode != 200) throw "";
+    } catch (e) {
+      return "There was an error getting this item.";
+    }
+
+    final data = jsonDecode(result.body);
+    final items = <Item>[];
+
+    for (final item in data) {
+      items.add(Item.fromJson(item));
+    }
+
+    return items;
+  }
 
   Future<dynamic> getItemById(String id) async {
     final service = ApiService.service;

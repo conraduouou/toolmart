@@ -30,6 +30,7 @@ class LandingProvider with ChangeNotifier {
   /// Returns true when there was no error found.
   Future<bool> login() async {
     toggleInAsync();
+    _errorMessage = null;
 
     final helper = ApiHelper.helper;
     final response = await helper.getUserByEmail(_email);
@@ -52,6 +53,8 @@ class LandingProvider with ChangeNotifier {
 
   void toggleInAsync() {
     _inAsync = !_inAsync;
+
+    if (_isDisposed) return;
     notifyListeners();
   }
 
@@ -59,11 +62,5 @@ class LandingProvider with ChangeNotifier {
   void dispose() {
     _isDisposed = true;
     super.dispose();
-  }
-
-  @override
-  void notifyListeners() {
-    if (_isDisposed) return;
-    super.notifyListeners();
   }
 }
