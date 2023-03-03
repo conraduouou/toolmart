@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toolmart/models/core/user.dart';
 import 'package:toolmart/models/helpers/api_helper.dart';
+import 'package:toolmart/models/helpers/storage.dart';
 
 class LandingProvider with ChangeNotifier {
   bool _isDisposed = false;
@@ -46,6 +47,9 @@ class LandingProvider with ChangeNotifier {
       toggleInAsync();
       return false;
     }
+
+    // TODO: add Name field in Users collection
+    await Storage.instance.write(key: "email", value: _email);
 
     toggleInAsync();
     return true;

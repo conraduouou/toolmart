@@ -6,6 +6,7 @@ import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
+import 'package:toolmart/models/helpers/storage.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
@@ -21,6 +22,25 @@ class UserScreen extends StatelessWidget {
         slivers: [
           const SliverToBoxAdapter(child: _UserScreenHeader()),
           const SliverToBoxAdapter(child: _UserScreenDetails()),
+          /*
+          SliverToBoxAdapter(
+            child: UtilityContainer(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Items bought',
+                    style: kTitleStyle.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: kNeutralColor.shade30,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           SliverFixedExtentList(
             itemExtent: ToolMartItemCard.height + 25,
             delegate: SliverChildListDelegate([
@@ -39,14 +59,33 @@ class UserScreen extends StatelessWidget {
             ]),
           ),
           const SliverToBoxAdapter(child: UtilityContainer(height: 80)),
+          */
         ],
       ),
     );
   }
 }
 
-class _UserScreenDetails extends StatelessWidget {
+class _UserScreenDetails extends StatefulWidget {
   const _UserScreenDetails();
+
+  @override
+  State<_UserScreenDetails> createState() => _UserScreenDetailsState();
+}
+
+class _UserScreenDetailsState extends State<_UserScreenDetails> {
+  String? _email;
+
+  @override
+  void initState() {
+    Storage.instance.read(key: "email").then((value) {
+      setState(() {
+        _email = value;
+      });
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,27 +96,19 @@ class _UserScreenDetails extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'User Name',
+            _email?.split("@")[0] ?? 'User Name',
             style: kHeadlineStyle.copyWith(
               color: kSecondaryColor.shade40,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            'user@email.com',
+            _email ?? 'user@email.com',
             style: kBodyStyle.copyWith(
               color: kSecondaryColor.shade40,
             ),
           ),
           const ToolMartDivider(height: 104),
-          Text(
-            'Items bought',
-            style: kTitleStyle.copyWith(
-              fontWeight: FontWeight.bold,
-              color: kNeutralColor.shade30,
-            ),
-          ),
-          const SizedBox(height: 20),
         ],
       ),
     );

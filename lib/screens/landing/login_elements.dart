@@ -59,13 +59,13 @@ class LoginElements extends StatelessWidget {
             width: 224,
             onTap: () async {
               final navigator = Navigator.of(context);
-              // final isSuccessful = await provider.login();
+              final isSuccessful = await provider.login();
 
-              // if (!isSuccessful) {
-              //   // ignore: use_build_context_synchronously
-              //   await _showDialog(context, provider.errorMessage);
-              //   return;
-              // }
+              if (!isSuccessful) {
+                // ignore: use_build_context_synchronously
+                await _showDialog(context, provider.errorMessage);
+                return;
+              }
 
               navigator.pushNamed(HomeScreen.id);
             },
