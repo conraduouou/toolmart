@@ -11,10 +11,10 @@ import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/models/core/cart_item.dart';
+import 'package:toolmart/models/core/transaction.dart';
 import 'package:toolmart/providers/cart/checkout_screen_provider.dart';
 import 'package:toolmart/screens/cart/cart_screen.dart';
 import 'package:toolmart/screens/cart/payment_success_screen.dart';
-import 'package:toolmart/screens/home/home_screen.dart';
 
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({
@@ -41,9 +41,9 @@ class CheckoutScreen extends StatelessWidget {
     CheckoutScreenProvider provider,
   ) async {
     final navigator = Navigator.of(context);
-    final isSuccessful = await provider.postTransaction();
+    final result = await provider.postTransaction();
 
-    if (!isSuccessful) {
+    if (result is! Transaction) {
       // ignore: use_build_context_synchronously
       return _showDialog(
         context,
@@ -52,7 +52,7 @@ class CheckoutScreen extends StatelessWidget {
       );
     }
 
-    navigator.pushNamed(PaymentSuccessScreen.id);
+    navigator.pushNamed(PaymentSuccessScreen.id, arguments: result);
   }
 
   @override

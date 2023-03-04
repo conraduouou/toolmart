@@ -64,7 +64,7 @@ class CheckoutScreenProvider with ChangeNotifier {
     _filteredNotify();
   }
 
-  Future<bool> postTransaction() async {
+  Future<Transaction?> postTransaction() async {
     toggleInAsync();
     _errorMessage = null;
 
@@ -82,18 +82,18 @@ class CheckoutScreenProvider with ChangeNotifier {
 
     if (result0 is String) {
       _errorMessage = 'There was an error making the transaction.';
-      return false;
+      return null;
     }
 
     final result1 = await helper.deleteCartItems();
 
     if (result1 is String) {
       _errorMessage = 'There was an error clearing the cart.';
-      return false;
+      return null;
     }
 
     toggleInAsync();
-    return true;
+    return result0;
   }
 
   void toggleInAsync() {

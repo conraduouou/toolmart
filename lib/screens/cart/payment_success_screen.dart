@@ -9,12 +9,19 @@ import 'package:toolmart/screens/home/home_screen.dart';
 import 'package:provider/provider.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
-  const PaymentSuccessScreen({super.key});
+  const PaymentSuccessScreen({
+    super.key,
+    required this.transactionId,
+  });
 
   static const id = '${CheckoutScreen.id}/success';
 
+  final String transactionId;
+
   @override
   Widget build(BuildContext context) {
+    final subId = transactionId.substring(
+        0, transactionId.length > 7 ? 7 : transactionId.length);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -73,7 +80,7 @@ class PaymentSuccessScreen extends StatelessWidget {
                     children: [
                       const TextSpan(text: 'Transaction '),
                       TextSpan(
-                        text: 'E12-001 ',
+                        text: '$subId... ',
                         style: kTitleStyle.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,

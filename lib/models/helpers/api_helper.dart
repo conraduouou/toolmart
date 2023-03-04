@@ -156,6 +156,9 @@ class ApiHelper {
       return "There was an error making this request.";
     }
 
-    return;
+    final data = jsonDecode(result.body);
+    final toReturn = Transaction.fromJson(data);
+
+    return toReturn;
   }
 }
