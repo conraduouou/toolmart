@@ -15,7 +15,8 @@ class ApiService {
 
   // TODO: make methods depend on userId for simple auth
 
-  Future<http.Response> getCartItems(String userId) async {
+  Future<http.Response> getCartItems() async {
+    final userId = await Storage.instance.read(key: "userId");
     Uri getUrl = Uri.https(_apiURL, '/api/cartitems/$userId');
     http.Response response = await http.get(getUrl);
     return response;

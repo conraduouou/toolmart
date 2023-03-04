@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/toolmart_control_button.dart';
 import 'package:toolmart/constants.dart';
+import 'package:toolmart/models/core/cart_item.dart';
 
 class ToolMartCartItem extends StatelessWidget {
-  const ToolMartCartItem({super.key});
+  const ToolMartCartItem({super.key, required this.cartItem});
 
   static const height = 64.0;
+  final CartItem cartItem;
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +34,14 @@ class ToolMartCartItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Shovel',
+                  cartItem.name!,
                   style: kBodyStyle.copyWith(
                     color: kNeutralColor.shade20,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
-                  'PHP 99',
+                  'PHP ${cartItem.price!.toStringAsFixed(2)}',
                   style: kLabelStyle.copyWith(
                     color: kSecondaryColor.shade50,
                   ),
@@ -54,7 +56,7 @@ class ToolMartCartItem extends StatelessWidget {
             children: [
               const SizedBox(height: 6),
               Text(
-                '1x',
+                '${cartItem.itemQuantity}x',
                 style: kBodyStyle.copyWith(
                   color: kNeutralColor.shade20,
                   fontWeight: FontWeight.w600,

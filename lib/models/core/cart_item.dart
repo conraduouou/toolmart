@@ -5,6 +5,14 @@ class CartItem {
   String? itemColor;
   int? itemQuantity;
 
+  String? name;
+  double? _price;
+
+  get _isNotNull => _price != null && itemQuantity != null;
+
+  double? get price => _isNotNull ? _price! * itemQuantity! : 0.0;
+  set price(double? p) => _price = p;
+
   CartItem(
       {this.id, this.userId, this.itemId, this.itemColor, this.itemQuantity});
 

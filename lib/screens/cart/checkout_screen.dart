@@ -59,18 +59,18 @@ class CheckoutScreen extends StatelessWidget {
               ]),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 60)),
-            SliverFixedExtentList(
-              itemExtent: ToolMartCartItem.height + 12,
-              delegate: SliverChildListDelegate([
-                for (int i = 0; i < 4; i++)
-                  Column(
-                    children: const [
-                      ToolMartCartItem(),
-                      SizedBox(height: 12),
-                    ],
-                  ),
-              ]),
-            ),
+            // SliverFixedExtentList(
+            //   itemExtent: ToolMartCartItem.height + 12,
+            //   delegate: SliverChildListDelegate([
+            //     for (int i = 0; i < 4; i++)
+            //       Column(
+            //         children: const [
+            //           ToolMartCartItem(),
+            //           SizedBox(height: 12),
+            //         ],
+            //       ),
+            //   ]),
+            // ),
             const SliverToBoxAdapter(child: SizedBox(height: 35)),
             const SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 20),
