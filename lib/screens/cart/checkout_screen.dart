@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
-import 'package:toolmart/components/toolmart_cart_item.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_radio_button.dart';
 import 'package:toolmart/components/toolmart_sticky_button.dart';

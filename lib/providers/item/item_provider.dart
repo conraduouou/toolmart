@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/item.dart';
 import 'package:toolmart/models/helpers/api_helper.dart';
-import 'package:http/http.dart' as http;
-import 'package:toolmart/models/helpers/storage.dart';
 
 class ItemProvider with ChangeNotifier {
   final Item item;
