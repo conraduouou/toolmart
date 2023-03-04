@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:toolmart/models/core/cart_item.dart';
+import 'package:toolmart/models/core/transaction.dart';
 import 'package:toolmart/models/helpers/storage.dart';
 
 class ApiService {
@@ -82,5 +83,26 @@ class ApiService {
     Uri getUrl = Uri.https(_apiURL, '/api/users/email/$email');
     http.Response response = await http.get(getUrl);
     return response;
+  }
+
+  Future<http.Response> postTransaction(Transaction transaction) async {
+    final userId = await Storage.instance.read(key: 'userId');
+    if (userId == null) return http.Response('Unauthorized', 401);
+
+    Uri postUrl = Uri.https(_apiURL, '/api/transactions');
+
+    HttpClient client = HttpClient();
+    HttpClientRequest request = await client.postUrl(postUrl);
+    request.headers.set('content-type', 'application/json');
+
+    request.add(utf8.encode(jsonEncode(transaction.toJson())));
+    HttpClientResponse httpResponse = await request.close();
+    client.close();
+
+    final responseBody = await httpResponse.transform(utf8.decoder).join();
+    final statusCode = httpResponse.statusCode;
+    final reasonPhrase = httpResponse.reasonPhrase;
+
+    return http.Response(responseBody, statusCode, reasonPhrase: reasonPhrase);
   }
 }

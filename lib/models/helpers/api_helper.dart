@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/item.dart';
+import 'package:toolmart/models/core/transaction.dart';
 import 'package:toolmart/models/core/user.dart';
 import 'package:toolmart/models/services/api_service.dart';
 import 'package:http/http.dart' as http;
@@ -128,5 +129,19 @@ class ApiHelper {
     final user = User.fromJson(data);
 
     return user;
+  }
+
+  Future<dynamic> postTransaction(Transaction transaction) async {
+    final service = ApiService.service;
+    late final http.Response result;
+
+    try {
+      result = await service.postTransaction(transaction);
+      if (result.statusCode < 200 || result.statusCode > 299) throw "";
+    } catch (e) {
+      return "There was an error making this request.";
+    }
+
+    return;
   }
 }

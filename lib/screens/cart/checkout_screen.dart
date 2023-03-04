@@ -10,6 +10,8 @@ import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/models/core/cart_item.dart';
+import 'package:toolmart/models/core/transaction.dart';
+import 'package:toolmart/models/helpers/api_helper.dart';
 import 'package:toolmart/providers/cart/checkout_screen_provider.dart';
 import 'package:toolmart/screens/cart/cart_screen.dart';
 import 'package:toolmart/screens/cart/payment_success_screen.dart';
@@ -39,8 +41,20 @@ class CheckoutScreen extends StatelessWidget {
               bottomNavigationBar: ToolMartStickyButton(
                 text:
                     'Pay (PHP ${totalPrice.toStringAsFixed(2)} - ${totalItems}x)',
-                onTap: () =>
-                    Navigator.of(context).pushNamed(PaymentSuccessScreen.id),
+                onTap: () async {
+                  final provider = context.read<CheckoutScreenProvider>();
+
+                  final helper = ApiHelper.helper;
+                  final result = await helper.postTransaction(
+                    Transaction(
+                      paymentMethod: provider.paymentMethod.toString(),
+                      totalQuantity: totalItems,
+                      price: totalPrice,
+                    ),
+                  );
+
+                  if (result is String) print('error');
+                },
               ),
               body: child!,
             );
