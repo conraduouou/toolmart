@@ -236,7 +236,7 @@ class _BankSection extends StatelessWidget {
               child: ToolMartTextfield(
                 hintText: 'Expiration date',
                 dateTimeOnly: true,
-                maxLength: 8,
+                maxLength: 5,
                 initialText: provider.expirationDate,
                 onChanged: (s) => provider.expirationDate = s,
               ),
