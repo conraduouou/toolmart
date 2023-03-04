@@ -26,7 +26,14 @@ class ApiService {
   Future<http.Response> deleteCartItem(CartItem cartItem) async {
     final userId = await Storage.instance.read(key: "userId");
     final id = cartItem.id;
-    Uri deleteUrl = Uri.https(_apiURL, '/api/cartitems/$id/$userId');
+    Uri deleteUrl = Uri.https(_apiURL, '/api/cartitems/one/$id/$userId');
+    http.Response response = await http.delete(deleteUrl);
+    return response;
+  }
+
+  Future<http.Response> deleteCartItems() async {
+    final userId = await Storage.instance.read(key: "userId");
+    Uri deleteUrl = Uri.https(_apiURL, '/api/cartitems/$userId');
     http.Response response = await http.delete(deleteUrl);
     return response;
   }

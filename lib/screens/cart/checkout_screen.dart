@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:toolmart/color_schemes.g.dart';
+import 'package:toolmart/components/error_dialog.dart';
 import 'package:toolmart/components/on_tap_wrapper.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_cart_item.dart';
@@ -10,11 +11,10 @@ import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/models/core/cart_item.dart';
-import 'package:toolmart/models/core/transaction.dart';
-import 'package:toolmart/models/helpers/api_helper.dart';
 import 'package:toolmart/providers/cart/checkout_screen_provider.dart';
 import 'package:toolmart/screens/cart/cart_screen.dart';
 import 'package:toolmart/screens/cart/payment_success_screen.dart';
+import 'package:toolmart/screens/home/home_screen.dart';
 
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({
@@ -24,6 +24,36 @@ class CheckoutScreen extends StatelessWidget {
 
   static const id = '${CartScreen.id}/checkout';
   final List<CartItem> cartItems;
+
+  Future<void> _showDialog(
+    BuildContext context, {
+    String? title,
+    String? message,
+  }) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => CustomDialog(title: title, message: message),
+    );
+  }
+
+  Future<void> _pay(
+    BuildContext context,
+    CheckoutScreenProvider provider,
+  ) async {
+    final navigator = Navigator.of(context);
+    final isSuccessful = await provider.postTransaction();
+
+    if (!isSuccessful) {
+      // ignore: use_build_context_synchronously
+      return _showDialog(
+        context,
+        title: 'Error',
+        message: provider.errorMessage,
+      );
+    }
+
+    navigator.pushNamed(PaymentSuccessScreen.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,25 +66,14 @@ class CheckoutScreen extends StatelessWidget {
       child: ChangeNotifierProvider(
           create: (_) => CheckoutScreenProvider(cartItems),
           builder: (context, child) {
+            final provider = context.watch<CheckoutScreenProvider>();
+
             return Scaffold(
               backgroundColor: Colors.white,
               bottomNavigationBar: ToolMartStickyButton(
                 text:
                     'Pay (PHP ${totalPrice.toStringAsFixed(2)} - ${totalItems}x)',
-                onTap: () async {
-                  final provider = context.read<CheckoutScreenProvider>();
-
-                  final helper = ApiHelper.helper;
-                  final result = await helper.postTransaction(
-                    Transaction(
-                      paymentMethod: provider.paymentMethod.toString(),
-                      totalQuantity: totalItems,
-                      price: totalPrice,
-                    ),
-                  );
-
-                  if (result is String) print('error');
-                },
+                onTap: () async => await _pay(context, provider),
               ),
               body: child!,
             );

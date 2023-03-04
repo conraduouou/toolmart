@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:toolmart/models/core/bank_details.dart';
 import 'package:toolmart/models/core/cart_item.dart';
+import 'package:toolmart/models/core/transaction.dart';
+import 'package:toolmart/models/helpers/api_helper.dart';
 
 enum PaymentMethod { cod, bank, gcash }
 
@@ -60,6 +62,38 @@ class CheckoutScreenProvider with ChangeNotifier {
   set isAgreed(bool b) {
     _isAgreed = b;
     _filteredNotify();
+  }
+
+  Future<bool> postTransaction() async {
+    toggleInAsync();
+    _errorMessage = null;
+
+    final helper = ApiHelper.helper;
+    final totalItems = cartItems.fold<int>(0, (p, e) => p + e.itemQuantity!);
+    final totalPrice = cartItems.fold<double>(0.0, (p, e) => p + e.price!);
+
+    final result0 = await helper.postTransaction(
+      Transaction(
+        paymentMethod: paymentMethod.toString(),
+        totalQuantity: totalItems,
+        price: totalPrice,
+      ),
+    );
+
+    if (result0 is String) {
+      _errorMessage = 'There was an error making the transaction.';
+      return false;
+    }
+
+    final result1 = await helper.deleteCartItems();
+
+    if (result1 is String) {
+      _errorMessage = 'There was an error clearing the cart.';
+      return false;
+    }
+
+    toggleInAsync();
+    return true;
   }
 
   void toggleInAsync() {

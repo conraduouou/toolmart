@@ -48,6 +48,20 @@ class ApiHelper {
     return;
   }
 
+  Future<dynamic> deleteCartItems() async {
+    final service = ApiService.service;
+    late final http.Response result;
+
+    try {
+      result = await service.deleteCartItems();
+      if (result.statusCode < 200 || result.statusCode > 299) throw "";
+    } catch (e) {
+      return "There was an error making this request.";
+    }
+
+    return;
+  }
+
   Future<dynamic> patchCartItem(CartItem cartItem) async {
     final service = ApiService.service;
     late final http.Response result;

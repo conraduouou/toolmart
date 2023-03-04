@@ -8,7 +8,7 @@ class CartScreenProvider with ChangeNotifier {
   bool _isDisposed = false;
   bool _inAsync = false;
   String? _errorMessage;
-  final Debouncer _debouncer = Debouncer();
+  final Debouncer _debouncer = Debouncer(milliseconds: 300);
 
   final List<CartItem> _cartItems = [];
 
