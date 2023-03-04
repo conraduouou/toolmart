@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/constants.dart';
 
-class ErrorDialog extends StatelessWidget {
-  const ErrorDialog({
+class CustomDialog extends StatelessWidget {
+  const CustomDialog({
     super.key,
+    this.title,
     this.message,
   });
 
+  final String? title;
   final String? message;
 
   @override
@@ -22,7 +24,7 @@ class ErrorDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Error!',
+              title ?? 'Error!',
               style: kHeadlineStyle.copyWith(
                 color: kPrimaryColor.shade50,
               ),

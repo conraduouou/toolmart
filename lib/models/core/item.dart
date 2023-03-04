@@ -7,6 +7,8 @@ class Item {
   int? left;
   double? price;
 
+  int toOrder = 1;
+
   Item(
       {this.id,
       this.name,

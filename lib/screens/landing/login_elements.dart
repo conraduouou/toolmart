@@ -15,7 +15,7 @@ class LoginElements extends StatelessWidget {
   Future<void> _showDialog(BuildContext context, String? message) async {
     return await showDialog(
       context: context,
-      builder: (context) => ErrorDialog(message: message),
+      builder: (context) => CustomDialog(message: message),
     );
   }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:toolmart/color_schemes.g.dart';
+import 'package:toolmart/components/error_dialog.dart';
 import 'package:toolmart/components/toolmart_control_button.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
@@ -9,20 +11,68 @@ import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
+import 'package:toolmart/models/core/item.dart';
+import 'package:toolmart/providers/item/item_provider.dart';
 
 class ItemScreen extends StatelessWidget {
-  const ItemScreen({super.key});
+  const ItemScreen({
+    super.key,
+    required this.itemDetails,
+  });
 
   static const id = '/home/item';
+  final Item itemDetails;
+
+  Future<void> _showErrorDialog(BuildContext context, String? message) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => CustomDialog(
+        message: message,
+      ),
+    );
+  }
+
+  Future<void> _showSuccessDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => const CustomDialog(
+        title: 'Success!',
+        message: 'Successfully added to cart.',
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: kTertiaryColor.shade70,
-        bottomNavigationBar: const ToolMartStickyButton(text: 'Add to Cart'),
-        body: CustomScrollView(
+      child: ChangeNotifierProvider(
+        create: (_) => ItemProvider(itemDetails),
+        builder: (context, child) {
+          final provider = context.read<ItemProvider>();
+
+          return Scaffold(
+            backgroundColor: kTertiaryColor.shade70,
+            bottomNavigationBar: ToolMartStickyButton(
+              text: 'Add to Cart',
+              onTap: () async {
+                final navigator = Navigator.of(context);
+                final isSuccessful = await provider.postCartItem();
+
+                if (!isSuccessful) {
+                  // ignore: use_build_context_synchronously
+                  _showErrorDialog(context, provider.errorMessage);
+                }
+
+                // ignore: use_build_context_synchronously
+                _showSuccessDialog(context);
+                navigator.pop();
+              },
+            ),
+            body: child!,
+          );
+        },
+        child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
             const SliverToBoxAdapter(child: _ItemScreenHeader()),
@@ -101,22 +151,33 @@ class _ItemScreenHeader extends StatelessWidget {
 class _ItemScreenDetails extends StatelessWidget {
   const _ItemScreenDetails();
 
+  String _fold(List<String>? items) {
+    return items?.fold('', (p, e) => '${_stringCheck(p) ? '$p, ' : ''}$e') ??
+        '';
+  }
+
+  bool _stringCheck(String? p) {
+    return p != null && p.isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final itemDetails = context.read<ItemProvider>().item;
+
     return UtilityContainer(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Shovel',
+            itemDetails.name!,
             style: kHeadlineStyle.copyWith(
               color: kSecondaryColor.shade40,
             ),
           ),
           const SizedBox(height: 10),
           Text(
-            'A sturdy shovel.',
+            itemDetails.details!,
             style: kBodyStyle.copyWith(
               color: kSecondaryColor.shade40,
             ),
@@ -130,7 +191,7 @@ class _ItemScreenDetails extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Wood, Steel',
+            _fold(itemDetails.materials),
             style: kLabelStyle.copyWith(
               color: kNeutralColor.shade60,
               fontWeight: FontWeight.normal,
@@ -259,10 +320,15 @@ class _QuantityControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<ItemProvider>();
+    final toOrder = context.select<ItemProvider, int>((p) => p.item.toOrder);
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const ToolMartControlButton.minus(),
+        ToolMartControlButton.minus(
+          onTap: provider.onMinusTap,
+        ),
         const SizedBox(width: 30),
         SizedBox(
           height: 32,
@@ -270,7 +336,7 @@ class _QuantityControls extends StatelessWidget {
           child: FittedBox(
             fit: BoxFit.contain,
             child: Text(
-              '123',
+              toOrder.toString(),
               style: kHeadlineStyle.copyWith(
                 color: kSecondaryColor.shade40,
               ),
@@ -278,7 +344,9 @@ class _QuantityControls extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 30),
-        const ToolMartControlButton.plus(),
+        ToolMartControlButton.plus(
+          onTap: provider.onPlusTap,
+        ),
       ],
     );
   }

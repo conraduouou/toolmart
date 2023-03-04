@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/item.dart';
 import 'package:toolmart/models/core/user.dart';
 import 'package:toolmart/models/services/api_service.dart';
@@ -30,6 +31,20 @@ class ApiHelper {
     }
 
     return items;
+  }
+
+  Future<dynamic> postCartItem(CartItem cartItem) async {
+    final service = ApiService.service;
+    late final http.Response result;
+
+    try {
+      result = await service.postCartItem(cartItem);
+      if (result.statusCode < 200 || result.statusCode > 299) throw "";
+    } catch (e) {
+      return "There was an error getting this item.";
+    }
+
+    return;
   }
 
   Future<dynamic> getItemById(String id) async {

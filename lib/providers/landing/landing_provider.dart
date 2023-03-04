@@ -50,6 +50,7 @@ class LandingProvider with ChangeNotifier {
 
     // TODO: add Name field in Users collection
     await Storage.instance.write(key: "email", value: _email);
+    await Storage.instance.write(key: "userId", value: response.id);
 
     toggleInAsync();
     return true;

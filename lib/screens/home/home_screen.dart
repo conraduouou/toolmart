@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:toolmart/color_schemes.g.dart';
+import 'package:toolmart/components/on_tap_wrapper.dart';
 import 'package:toolmart/components/toolmart_item_card.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/components/triangle_painter.dart';
@@ -9,6 +10,8 @@ import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/providers/home/home_provider.dart';
 import 'package:toolmart/screens/home/home_overlay.dart';
+import 'package:toolmart/screens/item/item_screen.dart';
+import 'package:toolmart/toolmart_app.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -80,7 +83,14 @@ class _HomeScreenBody extends StatelessWidget {
                     for (int j = actualIndex;
                         j < actualIndex + 2 && j < itemCount;
                         j++)
-                      const ToolMartItemCard(),
+                      OnTapWrapper(
+                        onTap: () {
+                          final navigator = homeNavKey.currentState!;
+                          navigator.pushNamed(ItemScreen.id,
+                              arguments: provider.items[j]);
+                        },
+                        child: const ToolMartItemCard(),
+                      ),
                   ],
                 ),
               );

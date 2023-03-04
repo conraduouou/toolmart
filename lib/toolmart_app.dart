@@ -3,8 +3,8 @@ import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/landing_routes.dart';
 import 'package:toolmart/screens/landing/landing_screen.dart';
 
-final rootNavKey = GlobalKey();
-final homeNavKey = GlobalKey();
+final GlobalKey<NavigatorState> rootNavKey = GlobalKey();
+final GlobalKey<NavigatorState> homeNavKey = GlobalKey();
 
 class ToolMartApp extends StatelessWidget {
   const ToolMartApp({super.key});

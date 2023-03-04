@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toolmart/models/core/item.dart';
 import 'package:toolmart/screens/cart/cart_screen.dart';
 import 'package:toolmart/screens/cart/checkout_screen.dart';
 import 'package:toolmart/screens/cart/payment_success_screen.dart';
@@ -31,7 +32,8 @@ class HomeNavigator extends StatelessWidget {
         page = const HomeOverlay(initialPage: 1);
         break;
       case ItemScreen.id:
-        page = const ItemScreen();
+        final args = settings.arguments as Item;
+        page = ItemScreen(itemDetails: args);
         break;
       case CartScreen.id:
         page = const CartScreen();
