@@ -95,8 +95,12 @@ class _HomeScreenBody extends StatelessWidget {
                 ),
               );
             },
-            childCount: (9 / 2).ceil(),
+            childCount: (provider.items.length / 2).ceil(),
           ),
+        ),
+        const SliverFillRemaining(
+          hasScrollBody: false,
+          child: UtilityContainer(),
         )
       ],
     );

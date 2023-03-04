@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
-import 'package:toolmart/components/toolmart_item_card.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/triangle_painter.dart';
@@ -17,11 +16,15 @@ class UserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ColoredBox(
       color: kPrimaryColor.shade60,
-      child: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+      child: const CustomScrollView(
+        physics: BouncingScrollPhysics(),
         slivers: [
-          const SliverToBoxAdapter(child: _UserScreenHeader()),
-          const SliverToBoxAdapter(child: _UserScreenDetails()),
+          SliverToBoxAdapter(child: _UserScreenHeader()),
+          SliverToBoxAdapter(child: _UserScreenDetails()),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: UtilityContainer(),
+          )
           /*
           SliverToBoxAdapter(
             child: UtilityContainer(
