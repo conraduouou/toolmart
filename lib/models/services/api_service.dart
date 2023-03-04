@@ -22,6 +22,26 @@ class ApiService {
     return response;
   }
 
+  Future<http.Response> deleteCartItem(CartItem cartItem) async {
+    final userId = await Storage.instance.read(key: "userId");
+    final id = cartItem.id;
+    Uri deleteUrl = Uri.https(_apiURL, '/api/cartitems/$id/$userId');
+    http.Response response = await http.delete(deleteUrl);
+    return response;
+  }
+
+  Future<http.Response> patchCartItemQuantity(CartItem cartItem) async {
+    final userId = await Storage.instance.read(key: "userId");
+    final id = cartItem.id;
+    final quantity = cartItem.itemQuantity;
+
+    Uri patchUrl =
+        Uri.https(_apiURL, '/api/cartitems/quantity/$id/$userId/$quantity');
+
+    http.Response response = await http.patch(patchUrl);
+    return response;
+  }
+
   Future<http.Response> postCartItem(CartItem cartItem) async {
     Uri postUrl = Uri.https(_apiURL, '/api/cartitems');
     final userId = await Storage.instance.read(key: "userId");

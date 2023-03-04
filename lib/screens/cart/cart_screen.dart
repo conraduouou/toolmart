@@ -69,7 +69,12 @@ class CartScreen extends StatelessWidget {
                   for (int i = 0; i < provider.cartItems.length; i++)
                     Column(
                       children: [
-                        ToolMartCartItem(cartItem: provider.cartItems[i]),
+                        ToolMartCartItem(
+                          cartItem: provider.cartItems[i],
+                          onMinusTap: () => provider.onMinusTap(i),
+                          onPlusTap: () => provider.onPlusTap(i),
+                          onDeleteTap: () => provider.onDeleteTap(i),
+                        ),
                         const SizedBox(height: 12),
                       ],
                     ),

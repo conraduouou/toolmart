@@ -33,6 +33,48 @@ class ApiHelper {
     return items;
   }
 
+  Future<dynamic> deleteCartItem(CartItem cartItem) async {
+    final service = ApiService.service;
+    late final http.Response result;
+
+    try {
+      result = await service.deleteCartItem(cartItem);
+      if (result.statusCode < 200 || result.statusCode > 299) throw "";
+    } catch (e) {
+      return "There was an error making this request.";
+    }
+
+    return;
+  }
+
+  Future<dynamic> patchCartItem(CartItem cartItem) async {
+    final service = ApiService.service;
+    late final http.Response result;
+
+    try {
+      result = await service.patchCartItemQuantity(cartItem);
+      if (result.statusCode < 200 || result.statusCode > 299) throw "";
+    } catch (e) {
+      return "There was an error making this request.";
+    }
+
+    return;
+  }
+
+  Future<dynamic> postCartItem(CartItem cartItem) async {
+    final service = ApiService.service;
+    late final http.Response result;
+
+    try {
+      result = await service.postCartItem(cartItem);
+      if (result.statusCode < 200 || result.statusCode > 299) throw "";
+    } catch (e) {
+      return "There was an error getting this item.";
+    }
+
+    return;
+  }
+
   Future<dynamic> getItems() async {
     final service = ApiService.service;
     late final http.Response result;
@@ -52,20 +94,6 @@ class ApiHelper {
     }
 
     return items;
-  }
-
-  Future<dynamic> postCartItem(CartItem cartItem) async {
-    final service = ApiService.service;
-    late final http.Response result;
-
-    try {
-      result = await service.postCartItem(cartItem);
-      if (result.statusCode < 200 || result.statusCode > 299) throw "";
-    } catch (e) {
-      return "There was an error getting this item.";
-    }
-
-    return;
   }
 
   Future<dynamic> getItemById(String id) async {

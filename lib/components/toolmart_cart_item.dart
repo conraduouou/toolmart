@@ -5,10 +5,20 @@ import 'package:toolmart/constants.dart';
 import 'package:toolmart/models/core/cart_item.dart';
 
 class ToolMartCartItem extends StatelessWidget {
-  const ToolMartCartItem({super.key, required this.cartItem});
+  const ToolMartCartItem({
+    super.key,
+    required this.cartItem,
+    this.onMinusTap,
+    this.onPlusTap,
+    this.onDeleteTap,
+  });
 
   static const height = 64.0;
   final CartItem cartItem;
+
+  final VoidCallback? onMinusTap;
+  final VoidCallback? onPlusTap;
+  final VoidCallback? onDeleteTap;
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +76,20 @@ class ToolMartCartItem extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const ToolMartControlButton.minus(size: 24),
+                  ToolMartControlButton.minus(
+                    size: 24,
+                    onTap: onMinusTap,
+                  ),
                   const SizedBox(width: 7),
-                  const ToolMartControlButton.plus(size: 24),
+                  ToolMartControlButton.plus(
+                    size: 24,
+                    onTap: onPlusTap,
+                  ),
                   const SizedBox(width: 7),
-                  ToolMartControlButton.error(size: 24)
+                  ToolMartControlButton.error(
+                    size: 24,
+                    onTap: onDeleteTap,
+                  )
                 ],
               )
             ],
