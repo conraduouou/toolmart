@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:toolmart/color_schemes.g.dart';
+import 'package:toolmart/components/on_tap_wrapper.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_cart_item.dart';
 import 'package:toolmart/components/toolmart_radio_button.dart';
@@ -8,6 +10,7 @@ import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/models/core/cart_item.dart';
+import 'package:toolmart/providers/cart/checkout_screen_provider.dart';
 import 'package:toolmart/screens/cart/cart_screen.dart';
 import 'package:toolmart/screens/cart/payment_success_screen.dart';
 
@@ -28,99 +31,91 @@ class CheckoutScreen extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        bottomNavigationBar: ToolMartStickyButton(
-          text: 'Pay (PHP ${totalPrice.toStringAsFixed(2)} - ${totalItems}x)',
-          onTap: () => Navigator.of(context).pushNamed(PaymentSuccessScreen.id),
-        ),
-        body: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverList(
-              delegate: SliverChildListDelegate([
-                SizedBox(height: topPadding + 25),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(width: 32),
-                    ToolMartBackButton(
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 15,
-                          offset: const Offset(0, 4),
-                          color: Colors.black.withAlpha((2 / 25 * 255).floor()),
-                        )
-                      ],
-                    ),
-                    const SizedBox(width: 25),
-                    Text(
-                      'Checkout',
-                      style: kHeadlineStyle.copyWith(
-                        color: kPrimaryColor.shade60,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ]),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 60)),
-            SliverFixedExtentList(
-              itemExtent: ToolMartCartItem.height + 12,
-              delegate: SliverChildListDelegate([
-                for (int i = 0; i < cartItems.length; i++)
-                  Column(
+      child: ChangeNotifierProvider(
+          create: (_) => CheckoutScreenProvider(cartItems),
+          builder: (context, child) {
+            return Scaffold(
+              backgroundColor: Colors.white,
+              bottomNavigationBar: ToolMartStickyButton(
+                text:
+                    'Pay (PHP ${totalPrice.toStringAsFixed(2)} - ${totalItems}x)',
+                onTap: () =>
+                    Navigator.of(context).pushNamed(PaymentSuccessScreen.id),
+              ),
+              body: child!,
+            );
+          },
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  SizedBox(height: topPadding + 25),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      ToolMartCartItem(
-                        cartItem: cartItems[i],
-                        enableControls: false,
+                      const SizedBox(width: 32),
+                      ToolMartBackButton(
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 15,
+                            offset: const Offset(0, 4),
+                            color:
+                                Colors.black.withAlpha((2 / 25 * 255).floor()),
+                          )
+                        ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(width: 25),
+                      Text(
+                        'Checkout',
+                        style: kHeadlineStyle.copyWith(
+                          color: kPrimaryColor.shade60,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ],
                   ),
-              ]),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 35)),
-            const SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverToBoxAdapter(
-                child: _MethodOfPayment(),
+                ]),
               ),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 100)),
-          ],
-        ),
-      ),
+              const SliverToBoxAdapter(child: SizedBox(height: 60)),
+              SliverFixedExtentList(
+                itemExtent: ToolMartCartItem.height + 12,
+                delegate: SliverChildListDelegate([
+                  for (int i = 0; i < cartItems.length; i++)
+                    Column(
+                      children: [
+                        ToolMartCartItem(
+                          cartItem: cartItems[i],
+                          enableControls: false,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
+                ]),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 35)),
+              const SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                sliver: SliverToBoxAdapter(
+                  child: _MethodOfPayment(),
+                ),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 100)),
+            ],
+          )),
     );
   }
 }
 
-class _MethodOfPayment extends StatefulWidget {
+class _MethodOfPayment extends StatelessWidget {
   const _MethodOfPayment();
 
   @override
-  State<_MethodOfPayment> createState() => _MethodOfPaymentState();
-}
-
-class _MethodOfPaymentState extends State<_MethodOfPayment> {
-  int activeMethod = 0;
-  int activeBank = 0;
-
-  void _onMethodTap(int index) {
-    setState(() {
-      activeMethod = index;
-    });
-  }
-
-  void _onBankTap(int index) {
-    setState(() {
-      activeBank = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final provider = context.read<CheckoutScreenProvider>();
+    final activeMethod = context
+        .select<CheckoutScreenProvider, PaymentMethod>((p) => p.paymentMethod);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -136,31 +131,28 @@ class _MethodOfPaymentState extends State<_MethodOfPayment> {
           children: [
             _PaymentMethod(
               method: 'Cash on Delivery',
-              isSelected: activeMethod == 0,
-              onTap: () => _onMethodTap(0),
+              isSelected: activeMethod == PaymentMethod.cod,
+              onTap: () => provider.paymentMethod = PaymentMethod.cod,
             ),
             const SizedBox(width: 20),
             _PaymentMethod(
               method: 'Bank',
-              isSelected: activeMethod == 1,
-              onTap: () => _onMethodTap(1),
+              isSelected: activeMethod == PaymentMethod.bank,
+              onTap: () => provider.paymentMethod = PaymentMethod.bank,
             ),
             const SizedBox(width: 20),
             _PaymentMethod(
               method: 'GCash',
-              isSelected: activeMethod == 2,
-              onTap: () => _onMethodTap(2),
+              isSelected: activeMethod == PaymentMethod.gcash,
+              onTap: () => provider.paymentMethod = PaymentMethod.gcash,
             ),
           ],
         ),
         const SizedBox(height: 30),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
-          child: activeMethod == 1
-              ? _BankSection(
-                  activeBank: activeBank,
-                  onBankTap: _onBankTap,
-                )
+          child: activeMethod == PaymentMethod.bank
+              ? const _BankSection()
               : Container(key: UniqueKey()),
         ),
       ],
@@ -169,16 +161,14 @@ class _MethodOfPaymentState extends State<_MethodOfPayment> {
 }
 
 class _BankSection extends StatelessWidget {
-  const _BankSection({
-    required this.activeBank,
-    required this.onBankTap,
-  });
-
-  final int activeBank;
-  final Function(int) onBankTap;
+  const _BankSection();
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<CheckoutScreenProvider>();
+    final activeBank =
+        context.select<CheckoutScreenProvider, int>((p) => p.bank);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -192,13 +182,13 @@ class _BankSection extends StatelessWidget {
                 _BankButton(
                   assetPath: 'assets/illustrations/card-bancontact.svg',
                   isSelected: activeBank == 0,
-                  onTap: () => onBankTap(0),
+                  onTap: () => provider.bank = 0,
                 ),
                 const SizedBox(height: 12),
                 _BankButton(
                   assetPath: 'assets/illustrations/card-mastercard.svg',
                   isSelected: activeBank == 3,
-                  onTap: () => onBankTap(3),
+                  onTap: () => provider.bank = 3,
                 ),
               ],
             ),
@@ -209,70 +199,101 @@ class _BankSection extends StatelessWidget {
                   assetPath: 'assets/illustrations/card-amex.svg',
                   // isImage: true,
                   isSelected: activeBank == 1,
-                  onTap: () => onBankTap(1),
+                  onTap: () => provider.bank = 1,
                 ),
                 const SizedBox(height: 12),
                 _BankButton(
                   assetPath: 'assets/illustrations/card-paypal.svg',
                   isSelected: activeBank == 4,
-                  onTap: () => onBankTap(4),
+                  onTap: () => provider.bank = 4,
                 ),
               ],
             ),
             _BankButton(
               assetPath: 'assets/illustrations/card-visa.svg',
               isSelected: activeBank == 2,
-              onTap: () => onBankTap(2),
+              onTap: () => provider.bank = 2,
             ),
           ],
         ),
         const SizedBox(height: 30),
-        const ToolMartTextfield(hintText: 'Cardholder name'),
+        ToolMartTextfield(
+          hintText: 'Cardholder name',
+          initialText: provider.userName,
+          onChanged: (s) => provider.userName = s,
+        ),
         const SizedBox(height: 12),
-        const ToolMartTextfield(hintText: 'Card number', digitsOnly: true),
+        ToolMartTextfield(
+          hintText: 'Card number',
+          digitsOnly: true,
+          initialText: provider.cardNumber,
+          onChanged: (s) => provider.cardNumber = s,
+        ),
         const SizedBox(height: 12),
         Row(
-          children: const [
+          children: [
             Expanded(
               child: ToolMartTextfield(
                 hintText: 'Expiration date',
                 dateTimeOnly: true,
+                maxLength: 8,
+                initialText: provider.expirationDate,
+                onChanged: (s) => provider.expirationDate = s,
               ),
             ),
-            SizedBox(width: 30),
+            const SizedBox(width: 30),
             Expanded(
               child: ToolMartTextfield(
                 hintText: 'Security code',
                 digitsOnly: true,
+                maxLength: 3,
+                initialText: provider.securityCode,
+                onChanged: (s) => provider.securityCode = s,
               ),
             ),
           ],
         ),
         const SizedBox(height: 20),
-        Row(
-          children: [
-            const ToolMartCheckboxButton(isSelected: true),
-            const SizedBox(width: 10),
-            RichText(
-              text: TextSpan(
-                  style: kBodyStyle.copyWith(
-                    color: kPrimaryColor.shade60,
-                  ),
-                  children: [
-                    const TextSpan(text: 'I agree to the '),
-                    TextSpan(
-                      text: 'Terms and Conditions',
-                      style: kBodyStyle.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: kSecondaryColor.shade40,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ]),
-            )
-          ],
-        )
+        const _TermsAndConditions()
       ],
+    );
+  }
+}
+
+class _TermsAndConditions extends StatelessWidget {
+  const _TermsAndConditions();
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.read<CheckoutScreenProvider>();
+    final isAgreed =
+        context.select<CheckoutScreenProvider, bool>((p) => p.isAgreed);
+
+    return OnTapWrapper(
+      onTap: () => provider.isAgreed = !provider.isAgreed,
+      child: Row(
+        children: [
+          ToolMartCheckboxButton(isSelected: isAgreed),
+          const SizedBox(width: 10),
+          RichText(
+            text: TextSpan(
+                style: kBodyStyle.copyWith(
+                  color: kPrimaryColor.shade60,
+                ),
+                children: [
+                  const TextSpan(text: 'I agree to the '),
+                  TextSpan(
+                    text: 'Terms and Conditions',
+                    style: kBodyStyle.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: kSecondaryColor.shade40,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ]),
+          )
+        ],
+      ),
     );
   }
 }

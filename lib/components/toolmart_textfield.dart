@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter/services.dart'
+    show
+        TextInputFormatter,
+        LengthLimitingTextInputFormatter,
+        FilteringTextInputFormatter;
+import 'package:flutter_svg/svg.dart' show SvgPicture;
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/constants.dart';
 
@@ -22,6 +26,7 @@ class ToolMartTextfield extends StatefulWidget {
     this.fieldType,
     this.focusNode,
     this.backgroundColor,
+    this.maxLength,
   });
 
   final double? height;
@@ -34,6 +39,7 @@ class ToolMartTextfield extends StatefulWidget {
   final ToolMartFieldType? fieldType;
   final FocusNode? focusNode;
   final Color? backgroundColor;
+  final int? maxLength;
 
   @override
   State<ToolMartTextfield> createState() => _ToolMartTextfieldState();
@@ -75,6 +81,16 @@ class _ToolMartTextfieldState extends State<ToolMartTextfield> {
 
   @override
   Widget build(BuildContext context) {
+    final List<TextInputFormatter> inputFormatter = widget.digitsOnly
+        ? [FilteringTextInputFormatter.digitsOnly]
+        : widget.dateTimeOnly
+            ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))]
+            : [];
+
+    if (widget.maxLength != null) {
+      inputFormatter.add(LengthLimitingTextInputFormatter(widget.maxLength));
+    }
+
     return Stack(
       children: [
         Focus(
@@ -107,9 +123,7 @@ class _ToolMartTextfieldState extends State<ToolMartTextfield> {
                           : widget.dateTimeOnly
                               ? TextInputType.datetime
                               : null,
-                      inputFormatters: widget.digitsOnly || widget.dateTimeOnly
-                          ? [FilteringTextInputFormatter.digitsOnly]
-                          : null,
+                      inputFormatters: inputFormatter,
                       style: kBodyStyle.copyWith(
                         color: kNeutralVariant.shade60,
                       ),
