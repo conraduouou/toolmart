@@ -6,7 +6,9 @@ import 'package:toolmart/models/helpers/api_helper.dart';
 class ItemProvider with ChangeNotifier {
   final Item item;
 
-  ItemProvider(this.item);
+  ItemProvider(this.item) {
+    item.toOrder = 1;
+  }
 
   bool _isDisposed = false;
   bool _inAsync = false;
