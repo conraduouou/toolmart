@@ -28,7 +28,10 @@ class CartScreen extends StatelessWidget {
           backgroundColor: Colors.white,
           bottomNavigationBar: ToolMartStickyButton(
             text: 'Checkout',
-            onTap: () => Navigator.of(context).pushNamed(CheckoutScreen.id),
+            onTap: () => Navigator.of(context).pushNamed(
+              CheckoutScreen.id,
+              arguments: provider.cartItems,
+            ),
           ),
           body: CustomScrollView(
             physics: const BouncingScrollPhysics(),

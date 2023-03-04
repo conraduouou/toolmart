@@ -11,6 +11,7 @@ class ToolMartCartItem extends StatelessWidget {
     this.onMinusTap,
     this.onPlusTap,
     this.onDeleteTap,
+    this.enableControls = true,
   });
 
   static const height = 64.0;
@@ -19,6 +20,8 @@ class ToolMartCartItem extends StatelessWidget {
   final VoidCallback? onMinusTap;
   final VoidCallback? onPlusTap;
   final VoidCallback? onDeleteTap;
+
+  final bool enableControls;
 
   @override
   Widget build(BuildContext context) {
@@ -73,25 +76,27 @@ class ToolMartCartItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 5),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ToolMartControlButton.minus(
-                    size: 24,
-                    onTap: onMinusTap,
-                  ),
-                  const SizedBox(width: 7),
-                  ToolMartControlButton.plus(
-                    size: 24,
-                    onTap: onPlusTap,
-                  ),
-                  const SizedBox(width: 7),
-                  ToolMartControlButton.error(
-                    size: 24,
-                    onTap: onDeleteTap,
-                  )
-                ],
-              )
+              enableControls
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ToolMartControlButton.minus(
+                          size: 24,
+                          onTap: onMinusTap,
+                        ),
+                        const SizedBox(width: 7),
+                        ToolMartControlButton.plus(
+                          size: 24,
+                          onTap: onPlusTap,
+                        ),
+                        const SizedBox(width: 7),
+                        ToolMartControlButton.error(
+                          size: 24,
+                          onTap: onDeleteTap,
+                        )
+                      ],
+                    )
+                  : Container(),
             ],
           ),
           const SizedBox(width: 20)

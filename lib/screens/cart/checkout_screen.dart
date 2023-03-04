@@ -2,20 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
+import 'package:toolmart/components/toolmart_cart_item.dart';
 import 'package:toolmart/components/toolmart_radio_button.dart';
 import 'package:toolmart/components/toolmart_sticky_button.dart';
 import 'package:toolmart/components/toolmart_textfield.dart';
 import 'package:toolmart/constants.dart';
+import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/screens/cart/cart_screen.dart';
 import 'package:toolmart/screens/cart/payment_success_screen.dart';
 
 class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen({super.key});
+  const CheckoutScreen({
+    super.key,
+    required this.cartItems,
+  });
 
   static const id = '${CartScreen.id}/checkout';
+  final List<CartItem> cartItems;
 
   @override
   Widget build(BuildContext context) {
+    final totalPrice = cartItems.fold<double>(0.0, (p, e) => p + e.price!);
+    final totalItems = cartItems.fold<int>(0, (p, e) => p + e.itemQuantity!);
     final topPadding = MediaQuery.of(context).viewPadding.top;
 
     return GestureDetector(
@@ -23,7 +31,7 @@ class CheckoutScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         bottomNavigationBar: ToolMartStickyButton(
-          text: 'Pay',
+          text: 'Pay (PHP ${totalPrice.toStringAsFixed(2)} - ${totalItems}x)',
           onTap: () => Navigator.of(context).pushNamed(PaymentSuccessScreen.id),
         ),
         body: CustomScrollView(
@@ -58,18 +66,21 @@ class CheckoutScreen extends StatelessWidget {
               ]),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 60)),
-            // SliverFixedExtentList(
-            //   itemExtent: ToolMartCartItem.height + 12,
-            //   delegate: SliverChildListDelegate([
-            //     for (int i = 0; i < 4; i++)
-            //       Column(
-            //         children: const [
-            //           ToolMartCartItem(),
-            //           SizedBox(height: 12),
-            //         ],
-            //       ),
-            //   ]),
-            // ),
+            SliverFixedExtentList(
+              itemExtent: ToolMartCartItem.height + 12,
+              delegate: SliverChildListDelegate([
+                for (int i = 0; i < cartItems.length; i++)
+                  Column(
+                    children: [
+                      ToolMartCartItem(
+                        cartItem: cartItems[i],
+                        enableControls: false,
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
+              ]),
+            ),
             const SliverToBoxAdapter(child: SizedBox(height: 35)),
             const SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 20),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/item.dart';
 import 'package:toolmart/screens/cart/cart_screen.dart';
 import 'package:toolmart/screens/cart/checkout_screen.dart';
@@ -39,7 +40,8 @@ class HomeNavigator extends StatelessWidget {
         page = const CartScreen();
         break;
       case CheckoutScreen.id:
-        page = const CheckoutScreen();
+        final args = settings.arguments as List<CartItem>;
+        page = CheckoutScreen(cartItems: args);
         break;
       case PaymentSuccessScreen.id:
         page = const PaymentSuccessScreen();
