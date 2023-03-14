@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:toolmart/color_schemes.g.dart';
+import 'package:toolmart/components/on_tap_wrapper.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/models/helpers/storage.dart';
+import 'package:toolmart/screens/transaction/transaction_screen.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
@@ -16,15 +19,51 @@ class UserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ColoredBox(
       color: kPrimaryColor.shade60,
-      child: const CustomScrollView(
-        physics: BouncingScrollPhysics(),
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverToBoxAdapter(child: _UserScreenHeader()),
-          SliverToBoxAdapter(child: _UserScreenDetails()),
-          SliverFillRemaining(
+          const SliverToBoxAdapter(child: _UserScreenHeader()),
+          const SliverToBoxAdapter(child: _UserScreenDetails()),
+          const SliverToBoxAdapter(
+            child: UtilityContainer(
+              child: ToolMartDivider(height: 104),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: UtilityContainer(
+              padding: const EdgeInsets.only(left: 20, bottom: 20),
+              child: Text(
+                'Transactions',
+                style: kTitleStyle.copyWith(
+                  color: kNeutralColor.shade30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                // if index is last item
+                if (index == 2 - 1) return const _TransactionCard();
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    _TransactionCard(),
+                    UtilityContainer(
+                      height: 16,
+                    )
+                  ],
+                );
+              },
+              childCount: 2,
+            ),
+          ),
+          const SliverToBoxAdapter(child: UtilityContainer(height: 80)),
+          const SliverFillRemaining(
             hasScrollBody: false,
             child: UtilityContainer(),
-          )
+          ),
           /*
           SliverToBoxAdapter(
             child: UtilityContainer(
@@ -61,9 +100,58 @@ class UserScreen extends StatelessWidget {
                 ),
             ]),
           ),
-          const SliverToBoxAdapter(child: UtilityContainer(height: 80)),
           */
         ],
+      ),
+    );
+  }
+}
+
+class _TransactionCard extends StatelessWidget {
+  const _TransactionCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return OnTapWrapper(
+      onTap: () => Navigator.of(context).pushNamed(TransactionScreen.id),
+      child: UtilityContainer(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            const SizedBox(width: 14),
+            SvgPicture.asset('assets/icons/ic-bag.svg'),
+            const SizedBox(width: 14),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'E12-001',
+                  style: kLabelStyle.copyWith(
+                    color: kNeutralVariant.shade30,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  'PHP 99.00',
+                  style: kLabelStyle.copyWith(
+                    color: kNeutralColor.shade50,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 10,
+                  ),
+                )
+              ],
+            ),
+            const Spacer(),
+            Text(
+              'February 28, 2023',
+              style: kLabelStyle.copyWith(
+                fontWeight: FontWeight.normal,
+                color: kNeutralColor.shade50,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -111,7 +199,6 @@ class _UserScreenDetailsState extends State<_UserScreenDetails> {
               color: kSecondaryColor.shade40,
             ),
           ),
-          const ToolMartDivider(height: 104),
         ],
       ),
     );

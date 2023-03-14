@@ -8,6 +8,7 @@ import 'package:toolmart/screens/cart/payment_success_screen.dart';
 import 'package:toolmart/screens/home/home_overlay.dart';
 import 'package:toolmart/screens/home/home_screen.dart';
 import 'package:toolmart/screens/item/item_screen.dart';
+import 'package:toolmart/screens/transaction/transaction_screen.dart';
 import 'package:toolmart/screens/user/user_screen.dart';
 import 'package:toolmart/toolmart_app.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,9 @@ class HomeNavigator extends StatelessWidget {
       case PaymentSuccessScreen.id:
         final args = settings.arguments as Transaction;
         page = PaymentSuccessScreen(transactionId: args.id!);
+        break;
+      case TransactionScreen.id:
+        page = const TransactionScreen();
         break;
     }
 
