@@ -9,6 +9,7 @@ import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
+import 'package:toolmart/models/core/transaction.dart';
 import 'package:toolmart/models/helpers/toolmart_storage.dart';
 import 'package:toolmart/providers/user/user_provider.dart';
 import 'package:toolmart/screens/transaction/transaction_screen.dart';
@@ -53,14 +54,8 @@ class UserScreen extends StatelessWidget {
                       delegate: SliverChildBuilderDelegate(
                         (context, i) {
                           final transactions = provider.transactions;
-                          final parsedDate =
-                              provider.parseDate(transactions[i].date!);
-
-                          final transaction = _TransactionCard(
-                            idSuffix: transactions[i].id!.substring(0, 7),
-                            price: transactions[i].price!,
-                            date: parsedDate!,
-                          );
+                          final transaction =
+                              _TransactionCard(transaction: transactions[i]);
 
                           if (i == transactions.length - 1) {
                             return transaction;
@@ -132,19 +127,22 @@ class UserScreen extends StatelessWidget {
 
 class _TransactionCard extends StatelessWidget {
   const _TransactionCard({
-    required this.idSuffix,
-    required this.price,
-    required this.date,
+    required this.transaction,
   });
 
-  final String idSuffix;
-  final double price;
-  final DateTime date;
+  final Transaction transaction;
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<UserProvider>();
+    final parsedDate = provider.parseDate(transaction.date!);
+    final subId = transaction.id!.substring(0, 7);
+
     return OnTapWrapper(
-      onTap: () => Navigator.of(context).pushNamed(TransactionScreen.id),
+      onTap: () => Navigator.of(context).pushNamed(
+        TransactionScreen.id,
+        arguments: transaction,
+      ),
       child: UtilityContainer(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
@@ -157,14 +155,14 @@ class _TransactionCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  idSuffix,
+                  subId,
                   style: kLabelStyle.copyWith(
                     color: kNeutralVariant.shade30,
                   ),
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'PHP ${price.toStringAsFixed(2)}',
+                  'PHP ${transaction.price!.toStringAsFixed(2)}',
                   style: kLabelStyle.copyWith(
                     color: kNeutralColor.shade50,
                     fontWeight: FontWeight.normal,
@@ -175,7 +173,7 @@ class _TransactionCard extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              DateFormat.yMMMMd().format(date),
+              DateFormat.yMMMMd().format(parsedDate!),
               style: kLabelStyle.copyWith(
                 fontWeight: FontWeight.normal,
                 color: kNeutralColor.shade50,

@@ -50,7 +50,8 @@ class HomeNavigator extends StatelessWidget {
         page = PaymentSuccessScreen(transactionId: args.id!);
         break;
       case TransactionScreen.id:
-        page = const TransactionScreen();
+        final args = settings.arguments as Transaction;
+        page = TransactionScreen(transaction: args);
         break;
     }
 

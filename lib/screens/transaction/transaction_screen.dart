@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/constants.dart';
+import 'package:toolmart/models/core/transaction.dart';
 import 'package:toolmart/screens/user/user_screen.dart';
 
 class TransactionScreen extends StatelessWidget {
-  const TransactionScreen({super.key});
+  const TransactionScreen({
+    super.key,
+    required this.transaction,
+  });
 
   static const id = '${UserScreen.id}/transaction';
+  final Transaction transaction;
 
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).viewPadding.top;
+    print(transaction.id);
 
     return Scaffold(
       backgroundColor: Colors.white,
