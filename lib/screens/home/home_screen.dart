@@ -86,8 +86,10 @@ class _HomeScreenBody extends StatelessWidget {
                       OnTapWrapper(
                         onTap: () {
                           final navigator = homeNavKey.currentState!;
-                          navigator.pushNamed(ItemScreen.id,
-                              arguments: provider.items[j]);
+                          navigator.pushNamed(
+                            ItemScreen.id,
+                            arguments: provider.items[j],
+                          );
                         },
                         child: const ToolMartItemCard(),
                       ),
