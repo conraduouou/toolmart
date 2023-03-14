@@ -210,6 +210,8 @@ class _UserScreenHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final topPadding = MediaQuery.of(context).viewPadding.top;
+
     return SizedBox(
       height: 215,
       child: Stack(
@@ -223,10 +225,10 @@ class _UserScreenHeader extends StatelessWidget {
             willChange: false,
             child: Container(),
           ),
-          const Positioned(
+          Positioned(
             left: 32,
-            bottom: 98,
-            child: ToolMartBackButton(),
+            top: topPadding + 25,
+            child: const ToolMartBackButton(),
           ),
           Positioned(
             left: 22,
