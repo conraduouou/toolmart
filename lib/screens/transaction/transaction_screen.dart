@@ -54,7 +54,7 @@ class _TransactionItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -67,62 +67,125 @@ class _TransactionItems extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
+          for (int i = 0; i < 3; i++)
+            Column(
+              children: [
+                const _TransactionItem(
+                  quantity: 1,
+                  itemName: 'Shovel',
+                  itemId: '#EASFEAD13486',
+                  itemPrice: 99.0,
+                ),
+                i != 2 ? const SizedBox(height: 12) : Container(),
+              ],
+            ),
+          const SizedBox(height: 7),
+          Divider(height: 26, color: kNeutralColor.shade80, thickness: 1),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'x1',
-                style: kLabelStyle.copyWith(
-                  fontWeight: FontWeight.normal,
+                'x3',
+                style: kTitleStyle.copyWith(
+                  fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(width: 25),
-              CustomPaint(
-                painter: _LinePainter(),
-                child: Container(
-                  height: 12,
-                  width: 12,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.black, width: 0.5),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Shovel',
-                    style: kLabelStyle.copyWith(
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '#EASFEAD13486',
-                    style: kLabelStyle.copyWith(
-                      fontWeight: FontWeight.normal,
-                      color: kNeutralColor.shade50,
-                    ),
-                  )
-                ],
-              ),
               const Spacer(),
               Text(
-                'PHP 99.00',
-                style: kLabelStyle.copyWith(
+                'PHP 396.00',
+                style: kTitleStyle.copyWith(
+                  fontWeight: FontWeight.bold,
                   color: kPrimaryColor.shade60,
-                  fontWeight: FontWeight.normal,
                 ),
-              )
+              ),
             ],
           )
         ],
       ),
+    );
+  }
+}
+
+class _TransactionItem extends StatelessWidget {
+  const _TransactionItem({
+    required this.itemName,
+    required this.itemId,
+    required this.quantity,
+    required this.itemPrice,
+    this.colorHex,
+  });
+
+  final String itemName;
+  final String itemId;
+  final int quantity;
+  final double itemPrice;
+  final String? colorHex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 24,
+          height: 15,
+          child: FittedBox(
+            fit: BoxFit.contain,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'x$quantity',
+              style: kLabelStyle.copyWith(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 25),
+        CustomPaint(
+          painter: colorHex == null ? _LinePainter() : null,
+          child: Container(
+            height: 12,
+            width: 12,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: colorHex == null
+                  ? Border.all(color: Colors.black, width: 0.5)
+                  : null,
+            ),
+          ),
+        ),
+        const SizedBox(width: 20),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              itemName,
+              style: kLabelStyle.copyWith(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              itemId,
+              style: kLabelStyle.copyWith(
+                fontWeight: FontWeight.normal,
+                color: kNeutralColor.shade50,
+              ),
+            )
+          ],
+        ),
+        const Spacer(),
+        Text(
+          'PHP ${(itemPrice * quantity).toStringAsFixed(2)}',
+          style: kLabelStyle.copyWith(
+            color: kPrimaryColor.shade60,
+            fontWeight: FontWeight.normal,
+          ),
+        )
+      ],
     );
   }
 }
