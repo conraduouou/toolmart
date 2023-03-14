@@ -44,7 +44,7 @@ class HomeProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    _isDisposed = false;
+    _isDisposed = true;
     super.dispose();
   }
 }

@@ -147,6 +147,29 @@ class ApiHelper {
     return user;
   }
 
+  Future<dynamic> getTransactions() async {
+    final service = ApiService.service;
+    late final http.Response response;
+
+    try {
+      response = await service.getTransactions();
+      if (response.statusCode != 200) throw "";
+    } catch (e) {
+      return 'There was an error retrieving transactions.';
+    }
+
+    final data = jsonDecode(response.body);
+
+    if (data is! List) {
+      return 'There was an error in processing the transactions';
+    }
+
+    final transactions =
+        data.map<Transaction>((e) => Transaction.fromJson(e)).toList();
+
+    return transactions;
+  }
+
   Future<dynamic> postTransaction(
     Transaction transaction,
     List<CartItem> items,

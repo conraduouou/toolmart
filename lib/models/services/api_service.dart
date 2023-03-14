@@ -93,6 +93,13 @@ class ApiService {
     return response;
   }
 
+  Future<http.Response> getTransactions() async {
+    final userId = await ToolMartStorage.instance.read(key: 'userId');
+    Uri getUrl = Uri.https(_apiURL, '/api/transactions/$userId');
+    http.Response response = await http.get(getUrl);
+    return response;
+  }
+
   Future<http.Response> postTransaction(
     Transaction transaction, {
     HttpClient? client,
