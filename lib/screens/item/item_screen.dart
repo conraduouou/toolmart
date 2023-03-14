@@ -183,19 +183,38 @@ class _ItemScreenDetails extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 50),
-          Text(
-            'Materials:',
-            style: kLabelStyle.copyWith(
-              color: kTertiaryColor.shade40,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            _fold(itemDetails.materials),
-            style: kLabelStyle.copyWith(
-              color: kNeutralColor.shade60,
-              fontWeight: FontWeight.normal,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Materials:',
+                    style: kLabelStyle.copyWith(
+                      color: kTertiaryColor.shade40,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _fold(itemDetails.materials),
+                    style: kLabelStyle.copyWith(
+                      color: kNeutralColor.shade60,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Text(
+                'PHP ${itemDetails.price!.toStringAsFixed(2)}',
+                style: kTitleStyle.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: kTertiaryColor.shade60,
+                ),
+              )
+            ],
           ),
           const SizedBox(height: 18),
           Row(
