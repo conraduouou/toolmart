@@ -3,7 +3,7 @@ import 'package:toolmart/models/core/bank_details.dart';
 import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/transaction.dart';
 import 'package:toolmart/models/helpers/api_helper.dart';
-import 'package:toolmart/models/helpers/storage.dart';
+import 'package:toolmart/models/helpers/toolmart_storage.dart';
 
 enum PaymentMethod { cod, bank, gcash }
 

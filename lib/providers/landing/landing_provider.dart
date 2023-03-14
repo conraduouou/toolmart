@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toolmart/models/core/user.dart';
 import 'package:toolmart/models/helpers/api_helper.dart';
-import 'package:toolmart/models/helpers/storage.dart';
+import 'package:toolmart/models/helpers/toolmart_storage.dart';
 
 class LandingProvider with ChangeNotifier {
   bool _isDisposed = false;

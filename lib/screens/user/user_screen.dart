@@ -7,7 +7,7 @@ import 'package:toolmart/components/toolmart_divider.dart';
 import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
-import 'package:toolmart/models/helpers/storage.dart';
+import 'package:toolmart/models/helpers/toolmart_storage.dart';
 import 'package:toolmart/screens/transaction/transaction_screen.dart';
 
 class UserScreen extends StatelessWidget {

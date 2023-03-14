@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/transaction.dart';
 import 'package:toolmart/models/core/transaction_item.dart';
-import 'package:toolmart/models/helpers/storage.dart';
+import 'package:toolmart/models/helpers/toolmart_storage.dart';
 
 class ApiService {
   static const _apiURL = 'toolmart-db.herokuapp.com';
