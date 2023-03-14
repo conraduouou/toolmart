@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/models/core/transaction.dart';
+import 'package:toolmart/models/core/transaction_item.dart';
 import 'package:toolmart/models/helpers/api_helper.dart';
 
-class UserProvider with ChangeNotifier {
+class TransactionProvider with ChangeNotifier {
   bool _isDisposed = false;
   bool _inAsync = false;
   String? _errorMessage;
@@ -11,26 +12,28 @@ class UserProvider with ChangeNotifier {
   bool get inAsync => _inAsync;
   String? get errorMessage => _errorMessage;
 
-  UserProvider() {
-    getTransactions();
+  final transactionItems = <TransactionItem>[];
+  final Transaction transaction;
+
+  TransactionProvider({required this.transaction}) {
+    getItems();
   }
 
-  final transactions = <Transaction>[];
-
-  Future<void> getTransactions() async {
+  Future<void> getItems() async {
     toggleInAsync();
     _errorMessage = null;
 
     final helper = ApiHelper.helper;
-    final response = await helper.getTransactions();
+    final response = await helper.getTransactionItems(transaction.id!);
 
-    if (response is! List<Transaction>) {
-      _errorMessage = 'There was an error retrieving transactions.';
+    if (response is! List<TransactionItem>) {
+      _errorMessage = response;
       toggleInAsync();
       return;
     }
 
-    transactions.addAll(response);
+    transactionItems.addAll(response);
+
     toggleInAsync();
   }
 
@@ -48,8 +51,7 @@ class UserProvider with ChangeNotifier {
 
   void toggleInAsync() {
     _inAsync = !_inAsync;
-    if (_isDisposed) return;
-    notifyListeners();
+    if (!_isDisposed) notifyListeners();
   }
 
   @override

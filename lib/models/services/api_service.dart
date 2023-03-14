@@ -80,9 +80,13 @@ class ApiService {
   }
 
   /// Get item by id of length 24
-  Future<http.Response> getItemById(String id) async {
+  Future<http.Response> getItemById(
+    String id, {
+    http.Client? client,
+  }) async {
     Uri getUrl = Uri.https(_apiURL, '/api/items/$id');
-    http.Response response = await http.get(getUrl);
+    http.Response response =
+        client != null ? await client.get(getUrl) : await http.get(getUrl);
     return response;
   }
 
@@ -95,6 +99,8 @@ class ApiService {
 
   Future<http.Response> getTransactions() async {
     final userId = await ToolMartStorage.instance.read(key: 'userId');
+    if (userId == null) return http.Response('Unauthorized', 401);
+
     Uri getUrl = Uri.https(_apiURL, '/api/transactions/$userId');
     http.Response response = await http.get(getUrl);
     return response;
@@ -122,6 +128,19 @@ class ApiService {
     final reasonPhrase = httpResponse.reasonPhrase;
 
     return http.Response(responseBody, statusCode, reasonPhrase: reasonPhrase);
+  }
+
+  Future<http.Response> getTransactionItems(
+    String id, {
+    http.Client? client,
+  }) async {
+    final userId = await ToolMartStorage.instance.read(key: 'userId');
+    if (userId == null) return http.Response('Unauthorized', 401);
+
+    Uri getUrl = Uri.https(_apiURL, '/api/transactionItems/$id');
+    http.Response response =
+        client != null ? await client.get(getUrl) : await http.get(getUrl);
+    return response;
   }
 
   Future<http.Response> postTransactionItems(

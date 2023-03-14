@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/models/core/transaction.dart';
+import 'package:toolmart/providers/transaction/transaction_provider.dart';
 import 'package:toolmart/screens/user/user_screen.dart';
 
 class TransactionScreen extends StatelessWidget {
@@ -17,36 +20,40 @@ class TransactionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).viewPadding.top;
-    print(transaction.id);
+    final subId = transaction.id!.substring(0, 7);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: topPadding + 25),
-              Row(
-                children: [
-                  const SizedBox(width: 12),
-                  const ToolMartBackButton(),
-                  const SizedBox(width: 25),
-                  Text(
-                    'E12-001',
-                    style: kHeadlineStyle.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: kPrimaryColor.shade60,
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 80),
-              const _TransactionDetails(),
-              const SizedBox(height: 75),
-              const _TransactionItems(),
-            ],
+    return ChangeNotifierProvider(
+      create: (context) => TransactionProvider(transaction: transaction),
+      builder: (context, child) => child!,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: topPadding + 25),
+                Row(
+                  children: [
+                    const SizedBox(width: 12),
+                    const ToolMartBackButton(),
+                    const SizedBox(width: 25),
+                    Text(
+                      subId,
+                      style: kHeadlineStyle.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: kPrimaryColor.shade60,
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 80),
+                const _TransactionDetails(),
+                const SizedBox(height: 75),
+                const _TransactionItems(),
+              ],
+            ),
           ),
         ),
       ),
@@ -59,6 +66,9 @@ class _TransactionItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<TransactionProvider>();
+    final transaction = provider.transaction;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -73,24 +83,35 @@ class _TransactionItems extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          for (int i = 0; i < 3; i++)
-            Column(
-              children: [
-                const _TransactionItem(
-                  quantity: 1,
-                  itemName: 'Shovel',
-                  itemId: '#EASFEAD13486',
-                  itemPrice: 99.0,
-                ),
-                i != 2 ? const SizedBox(height: 12) : Container(),
-              ],
-            ),
+          Consumer<TransactionProvider>(
+            builder: (subContext, provider, child) {
+              final transactionItems = provider.transactionItems;
+
+              return Column(
+                children: [
+                  for (int i = 0; i < transactionItems.length; i++)
+                    Padding(
+                      padding: i != transactionItems.length - 1
+                          ? const EdgeInsets.only(bottom: 12)
+                          : EdgeInsets.zero,
+                      child: _TransactionItem(
+                        quantity: transactionItems[i].itemQuantity!,
+                        itemName: transactionItems[i].itemName!,
+                        itemId: transactionItems[i].itemId!.substring(0, 7),
+                        itemPrice: transactionItems[i].itemPrice!,
+                        colorHex: transactionItems[i].itemColor,
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
           const SizedBox(height: 7),
           Divider(height: 26, color: kNeutralColor.shade80, thickness: 1),
           Row(
             children: [
               Text(
-                'x3',
+                'x${transaction.totalQuantity}',
                 style: kTitleStyle.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -98,7 +119,7 @@ class _TransactionItems extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                'PHP 396.00',
+                'PHP ${transaction.price!.toStringAsFixed(2)}',
                 style: kTitleStyle.copyWith(
                   fontWeight: FontWeight.bold,
                   color: kPrimaryColor.shade60,
@@ -129,6 +150,13 @@ class _TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int? color;
+
+    if (colorHex != null) {
+      final subString = colorHex!.substring(1);
+      color = int.tryParse('FF$subString', radix: 16);
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -149,15 +177,20 @@ class _TransactionItem extends StatelessWidget {
         ),
         const SizedBox(width: 25),
         CustomPaint(
-          painter: colorHex == null ? _LinePainter() : null,
+          painter: color == null ? _LinePainter() : null,
           child: Container(
             height: 12,
             width: 12,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: colorHex == null
-                  ? Border.all(color: Colors.black, width: 0.5)
+              border: color == null
+                  ? Border.all(
+                      color: Colors.black,
+                      width: 0.5,
+                      strokeAlign: BorderSide.strokeAlignInside,
+                    )
                   : null,
+              color: color == null ? Colors.transparent : Color(color),
             ),
           ),
         ),
@@ -216,20 +249,23 @@ class _TransactionDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<TransactionProvider>();
+    final parsedDate = provider.modifiedParse(provider.transaction.date!);
+
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: const [
+        children: [
           _TransactionDetail(
             heading: 'Transaction Date',
-            detail: 'February 28, 2023',
+            detail: DateFormat.yMMMMd().format(parsedDate!),
           ),
-          SizedBox(height: 35),
+          const SizedBox(height: 35),
           _TransactionDetail(
             heading: 'Method of payment',
-            detail: 'Bank (VISA)',
+            detail: provider.transaction.paymentMethod,
           ),
         ],
       ),

@@ -2,15 +2,20 @@ class TransactionItem {
   String? id;
   String? transactionId;
   String? itemId;
+  String? itemName;
   String? itemColor;
   int? itemQuantity;
+  double? itemPrice;
 
-  TransactionItem(
-      {this.id,
-      this.transactionId,
-      this.itemId,
-      this.itemColor,
-      this.itemQuantity});
+  TransactionItem({
+    this.id,
+    this.transactionId,
+    this.itemId,
+    this.itemName,
+    this.itemColor,
+    this.itemQuantity,
+    this.itemPrice,
+  });
 
   TransactionItem.fromJson(Map<String, dynamic> json) {
     id = json['Id'];

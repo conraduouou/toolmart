@@ -135,7 +135,7 @@ class _TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.read<UserProvider>();
-    final parsedDate = provider.parseDate(transaction.date!);
+    final parsedDate = provider.modifiedParse(transaction.date!);
     final subId = transaction.id!.substring(0, 7);
 
     return OnTapWrapper(

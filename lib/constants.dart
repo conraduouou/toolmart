@@ -29,3 +29,14 @@ const kLabelStyle = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 12,
 );
+
+DateTime? parseDate(String date) {
+  final mdy = date.split('T')[0].split('-');
+  final month = int.tryParse(mdy[1]);
+  final year = int.tryParse(mdy[0]);
+  final day = int.tryParse(mdy[2]);
+
+  if (month == null || year == null || day == null) return null;
+
+  return DateTime(year, month, day);
+}

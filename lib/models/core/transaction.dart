@@ -2,7 +2,7 @@ class Transaction {
   String? id;
   String? userId;
   String? date;
-  String? paymentMethod;
+  String? _paymentMethod;
   int? totalQuantity;
   double? price;
 
@@ -10,16 +10,29 @@ class Transaction {
     this.id,
     this.userId,
     this.date,
-    this.paymentMethod,
+    String? paymentMethod,
     this.totalQuantity,
     this.price,
-  });
+  }) : _paymentMethod = paymentMethod;
+
+  String get paymentMethod {
+    switch (_paymentMethod) {
+      case 'cod':
+        return 'Cash on Delivery';
+      case 'bank':
+        return 'Bank';
+      case 'gcash':
+        return 'GCash';
+    }
+
+    return '';
+  }
 
   Transaction.fromJson(Map<String, dynamic> json) {
     id = json['Id'];
     userId = json['userId'];
     date = json['Date'];
-    paymentMethod = json['PaymentMethod'];
+    _paymentMethod = json['PaymentMethod'];
     totalQuantity = json['TotalQuantity'];
     price = json['Price'];
   }
@@ -29,7 +42,7 @@ class Transaction {
     data['Id'] = id;
     data['userId'] = userId;
     data['Date'] = DateTime.now().toIso8601String();
-    data['PaymentMethod'] = paymentMethod;
+    data['PaymentMethod'] = _paymentMethod;
     data['TotalQuantity'] = totalQuantity;
     data['Price'] = price;
     return data;

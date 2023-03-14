@@ -211,4 +211,46 @@ class ApiHelper {
 
     return toReturn;
   }
+
+  Future<dynamic> getTransactionItems(String id) async {
+    final service = ApiService.service;
+    final c = http.Client();
+    late final http.Response result;
+
+    try {
+      result = await service.getTransactionItems(id, client: c);
+      if (result.statusCode != 200) throw '';
+    } catch (e) {
+      return 'There was an error in retrieving transaction items.';
+    }
+
+    final data = jsonDecode(result.body);
+
+    if (data is! List) {
+      return 'There was an error in processing transaction items.';
+    }
+
+    final toReturn =
+        data.map<TransactionItem>((e) => TransactionItem.fromJson(e)).toList();
+
+    try {
+      for (final transaction in toReturn) {
+        final result =
+            await service.getItemById(transaction.itemId!, client: c);
+        if (result.statusCode != 200) throw '';
+
+        final resultData = jsonDecode(result.body);
+        final item = Item.fromJson(resultData);
+
+        transaction.itemName = item.name;
+        transaction.itemPrice = item.price;
+      }
+    } catch (e) {
+      return 'There was an error in finalizing transaction items.';
+    }
+
+    c.close();
+
+    return toReturn;
+  }
 }
