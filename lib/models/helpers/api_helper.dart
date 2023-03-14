@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/item.dart';
@@ -151,11 +152,12 @@ class ApiHelper {
     List<CartItem> items,
   ) async {
     final service = ApiService.service;
+    final c = HttpClient();
     late final http.Response result0;
     late final http.Response result1;
 
     try {
-      result0 = await service.postTransaction(transaction);
+      result0 = await service.postTransaction(transaction, client: c);
       if (result0.statusCode < 200 || result0.statusCode > 299) throw "";
     } catch (e) {
       return "There was an error making the transaction.";
@@ -176,11 +178,13 @@ class ApiHelper {
           )
           .toList();
 
-      result1 = await service.postTransactionItems(transactionItems);
+      result1 = await service.postTransactionItems(transactionItems, client: c);
       if (result1.statusCode < 200 || result1.statusCode > 299) throw "";
     } catch (e) {
       return "There was an error in processing transaction items.";
     }
+
+    c.close();
 
     return toReturn;
   }

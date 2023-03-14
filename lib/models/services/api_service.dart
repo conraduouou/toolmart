@@ -93,19 +93,22 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> postTransaction(Transaction transaction) async {
+  Future<http.Response> postTransaction(
+    Transaction transaction, {
+    HttpClient? client,
+  }) async {
     final userId = await Storage.instance.read(key: 'userId');
     if (userId == null) return http.Response('Unauthorized', 401);
 
     Uri postUrl = Uri.https(_apiURL, '/api/transactions');
 
-    HttpClient client = HttpClient();
-    HttpClientRequest request = await client.postUrl(postUrl);
+    HttpClient localClient = client ?? HttpClient();
+    HttpClientRequest request = await localClient.postUrl(postUrl);
     request.headers.set('content-type', 'application/json');
 
     request.add(utf8.encode(jsonEncode(transaction.toJson())));
     HttpClientResponse httpResponse = await request.close();
-    client.close();
+    if (client == null) localClient.close();
 
     final responseBody = await httpResponse.transform(utf8.decoder).join();
     final statusCode = httpResponse.statusCode;
@@ -115,8 +118,9 @@ class ApiService {
   }
 
   Future<http.Response> postTransactionItems(
-    List<TransactionItem> items,
-  ) async {
+    List<TransactionItem> items, {
+    HttpClient? client,
+  }) async {
     final userId = await Storage.instance.read(key: 'userId');
     if (userId == null) return http.Response('Unauthorized', 401);
 
@@ -124,13 +128,13 @@ class ApiService {
 
     final requestBody = items.map((e) => e.toJson()).toList();
 
-    HttpClient client = HttpClient();
-    HttpClientRequest request = await client.postUrl(postUrl);
+    HttpClient localClient = client ?? HttpClient();
+    HttpClientRequest request = await localClient.postUrl(postUrl);
     request.headers.set('content-type', 'application/json');
 
     request.add(utf8.encode(jsonEncode(requestBody)));
     HttpClientResponse httpResponse = await request.close();
-    client.close();
+    if (client == null) localClient.close();
 
     final responseBody = await httpResponse.transform(utf8.decoder).join();
     final statusCode = httpResponse.statusCode;
