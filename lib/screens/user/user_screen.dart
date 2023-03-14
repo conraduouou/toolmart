@@ -169,7 +169,7 @@ class _UserScreenDetailsState extends State<_UserScreenDetails> {
 
   @override
   void initState() {
-    Storage.instance.read(key: "email").then((value) {
+    ToolMartStorage.instance.read(key: "email").then((value) {
       setState(() {
         _email = value;
       });

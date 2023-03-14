@@ -18,14 +18,14 @@ class ApiService {
   // TODO: make methods depend on userId for simple auth
 
   Future<http.Response> getCartItems() async {
-    final userId = await Storage.instance.read(key: "userId");
+    final userId = await ToolMartStorage.instance.read(key: "userId");
     Uri getUrl = Uri.https(_apiURL, '/api/cartitems/$userId');
     http.Response response = await http.get(getUrl);
     return response;
   }
 
   Future<http.Response> deleteCartItem(CartItem cartItem) async {
-    final userId = await Storage.instance.read(key: "userId");
+    final userId = await ToolMartStorage.instance.read(key: "userId");
     final id = cartItem.id;
     Uri deleteUrl = Uri.https(_apiURL, '/api/cartitems/one/$id/$userId');
     http.Response response = await http.delete(deleteUrl);
@@ -33,14 +33,14 @@ class ApiService {
   }
 
   Future<http.Response> deleteCartItems() async {
-    final userId = await Storage.instance.read(key: "userId");
+    final userId = await ToolMartStorage.instance.read(key: "userId");
     Uri deleteUrl = Uri.https(_apiURL, '/api/cartitems/$userId');
     http.Response response = await http.delete(deleteUrl);
     return response;
   }
 
   Future<http.Response> patchCartItemQuantity(CartItem cartItem) async {
-    final userId = await Storage.instance.read(key: "userId");
+    final userId = await ToolMartStorage.instance.read(key: "userId");
     final id = cartItem.id;
     final quantity = cartItem.itemQuantity;
 
@@ -53,7 +53,7 @@ class ApiService {
 
   Future<http.Response> postCartItem(CartItem cartItem) async {
     Uri postUrl = Uri.https(_apiURL, '/api/cartitems');
-    final userId = await Storage.instance.read(key: "userId");
+    final userId = await ToolMartStorage.instance.read(key: "userId");
 
     cartItem.userId = userId;
 
@@ -97,7 +97,7 @@ class ApiService {
     Transaction transaction, {
     HttpClient? client,
   }) async {
-    final userId = await Storage.instance.read(key: 'userId');
+    final userId = await ToolMartStorage.instance.read(key: 'userId');
     if (userId == null) return http.Response('Unauthorized', 401);
 
     Uri postUrl = Uri.https(_apiURL, '/api/transactions');
@@ -121,7 +121,7 @@ class ApiService {
     List<TransactionItem> items, {
     HttpClient? client,
   }) async {
-    final userId = await Storage.instance.read(key: 'userId');
+    final userId = await ToolMartStorage.instance.read(key: 'userId');
     if (userId == null) return http.Response('Unauthorized', 401);
 
     Uri postUrl = Uri.https(_apiURL, '/api/transactionitems');

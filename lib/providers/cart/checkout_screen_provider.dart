@@ -3,6 +3,7 @@ import 'package:toolmart/models/core/bank_details.dart';
 import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/transaction.dart';
 import 'package:toolmart/models/helpers/api_helper.dart';
+import 'package:toolmart/models/helpers/storage.dart';
 
 enum PaymentMethod { cod, bank, gcash }
 
@@ -69,11 +70,13 @@ class CheckoutScreenProvider with ChangeNotifier {
     _errorMessage = null;
 
     final helper = ApiHelper.helper;
+    final userId = await ToolMartStorage.instance.read(key: 'userId');
     final totalItems = cartItems.fold<int>(0, (p, e) => p + e.itemQuantity!);
     final totalPrice = cartItems.fold<double>(0.0, (p, e) => p + e.price!);
 
     final result0 = await helper.postTransaction(
       Transaction(
+        userId: userId,
         paymentMethod: paymentMethod.name.toString(),
         totalQuantity: totalItems,
         price: totalPrice,
