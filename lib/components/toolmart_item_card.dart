@@ -3,7 +3,14 @@ import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/constants.dart';
 
 class ToolMartItemCard extends StatelessWidget {
-  const ToolMartItemCard({super.key});
+  const ToolMartItemCard({
+    super.key,
+    required this.name,
+    required this.price,
+  });
+
+  final String name;
+  final double price;
 
   static const height = 201.0;
   static const width = 165.0;
@@ -30,9 +37,12 @@ class ToolMartItemCard extends StatelessWidget {
               boxShadow: _boxShadow,
             ),
           ),
-          const Positioned(
+          Positioned(
             bottom: 0,
-            child: _ItemLabel(width: width),
+            child: _ItemLabel(
+              name: name,
+              price: price,
+            ),
           ),
         ],
       ),
@@ -42,10 +52,12 @@ class ToolMartItemCard extends StatelessWidget {
 
 class _ItemLabel extends StatelessWidget {
   const _ItemLabel({
-    required this.width,
+    required this.name,
+    required this.price,
   });
 
-  final double width;
+  final String name;
+  final double price;
 
   static const _labelHeight = 75.0;
 
@@ -53,7 +65,7 @@ class _ItemLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: _labelHeight,
-      width: width,
+      width: ToolMartItemCard.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
@@ -64,7 +76,7 @@ class _ItemLabel extends StatelessWidget {
             left: 15,
             top: 10,
             child: Text(
-              'Shovel',
+              name,
               style: kLabelStyle.copyWith(
                 color: kNeutralColor.shade30,
               ),
@@ -74,7 +86,7 @@ class _ItemLabel extends StatelessWidget {
             right: 12,
             bottom: 9,
             child: Text(
-              'PHP 99',
+              'PHP ${price.toStringAsFixed(2)}',
               style: kLabelStyle.copyWith(
                 color: kSecondaryColor.shade50,
               ),

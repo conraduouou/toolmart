@@ -91,7 +91,10 @@ class _HomeScreenBody extends StatelessWidget {
                             arguments: provider.items[j],
                           );
                         },
-                        child: const ToolMartItemCard(),
+                        child: ToolMartItemCard(
+                          name: provider.items[j].name!,
+                          price: provider.items[j].price!,
+                        ),
                       ),
                   ],
                 ),
