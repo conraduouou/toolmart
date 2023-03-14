@@ -64,78 +64,78 @@ class CheckoutScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: ChangeNotifierProvider(
-          create: (_) => CheckoutScreenProvider(cartItems),
-          builder: (context, child) {
-            final provider = context.watch<CheckoutScreenProvider>();
+        create: (_) => CheckoutScreenProvider(cartItems),
+        builder: (context, child) {
+          final provider = context.watch<CheckoutScreenProvider>();
 
-            return Scaffold(
-              backgroundColor: Colors.white,
-              bottomNavigationBar: ToolMartStickyButton(
-                text:
-                    'Pay (PHP ${totalPrice.toStringAsFixed(2)} - ${totalItems}x)',
-                onTap: () async => await _pay(context, provider),
-              ),
-              body: child!,
-            );
-          },
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  SizedBox(height: topPadding + 25),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(width: 32),
-                      ToolMartBackButton(
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 15,
-                            offset: const Offset(0, 4),
-                            color:
-                                Colors.black.withAlpha((2 / 25 * 255).floor()),
-                          )
-                        ],
-                      ),
-                      const SizedBox(width: 25),
-                      Text(
-                        'Checkout',
-                        style: kHeadlineStyle.copyWith(
-                          color: kPrimaryColor.shade60,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ]),
-              ),
-              const SliverToBoxAdapter(child: SizedBox(height: 60)),
-              SliverFixedExtentList(
-                itemExtent: ToolMartCartItem.height + 12,
-                delegate: SliverChildListDelegate([
-                  for (int i = 0; i < cartItems.length; i++)
-                    Column(
-                      children: [
-                        ToolMartCartItem(
-                          cartItem: cartItems[i],
-                          enableControls: false,
-                        ),
-                        const SizedBox(height: 12),
+          return Scaffold(
+            backgroundColor: Colors.white,
+            bottomNavigationBar: ToolMartStickyButton(
+              text:
+                  'Pay (PHP ${totalPrice.toStringAsFixed(2)} - ${totalItems}x)',
+              onTap: () async => await _pay(context, provider),
+            ),
+            body: child!,
+          );
+        },
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate([
+                SizedBox(height: topPadding + 25),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(width: 32),
+                    ToolMartBackButton(
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 15,
+                          offset: const Offset(0, 4),
+                          color: Colors.black.withAlpha((2 / 25 * 255).floor()),
+                        )
                       ],
                     ),
-                ]),
-              ),
-              const SliverToBoxAdapter(child: SizedBox(height: 35)),
-              const SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                sliver: SliverToBoxAdapter(
-                  child: _MethodOfPayment(),
+                    const SizedBox(width: 25),
+                    Text(
+                      'Checkout',
+                      style: kHeadlineStyle.copyWith(
+                        color: kPrimaryColor.shade60,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
+              ]),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 60)),
+            SliverFixedExtentList(
+              itemExtent: ToolMartCartItem.height + 12,
+              delegate: SliverChildListDelegate([
+                for (int i = 0; i < cartItems.length; i++)
+                  Column(
+                    children: [
+                      ToolMartCartItem(
+                        cartItem: cartItems[i],
+                        enableControls: false,
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
+              ]),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 35)),
+            const SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverToBoxAdapter(
+                child: _MethodOfPayment(),
               ),
-              const SliverToBoxAdapter(child: SizedBox(height: 100)),
-            ],
-          )),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          ],
+        ),
+      ),
     );
   }
 }
