@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/item.dart';
 import 'package:toolmart/models/core/transaction.dart';
+import 'package:toolmart/models/core/transaction_item.dart';
 import 'package:toolmart/models/core/user.dart';
 import 'package:toolmart/models/services/api_service.dart';
 import 'package:http/http.dart' as http;
@@ -145,19 +146,41 @@ class ApiHelper {
     return user;
   }
 
-  Future<dynamic> postTransaction(Transaction transaction) async {
+  Future<dynamic> postTransaction(
+    Transaction transaction,
+    List<CartItem> items,
+  ) async {
     final service = ApiService.service;
-    late final http.Response result;
+    late final http.Response result0;
+    late final http.Response result1;
 
     try {
-      result = await service.postTransaction(transaction);
-      if (result.statusCode < 200 || result.statusCode > 299) throw "";
+      result0 = await service.postTransaction(transaction);
+      if (result0.statusCode < 200 || result0.statusCode > 299) throw "";
     } catch (e) {
-      return "There was an error making this request.";
+      return "There was an error making the transaction.";
     }
 
-    final data = jsonDecode(result.body);
+    final data = jsonDecode(result0.body);
     final toReturn = Transaction.fromJson(data);
+
+    try {
+      final transactionItems = items
+          .map<TransactionItem>(
+            (e) => TransactionItem(
+              transactionId: toReturn.id,
+              itemColor: e.itemColor,
+              itemId: e.itemId,
+              itemQuantity: e.itemQuantity,
+            ),
+          )
+          .toList();
+
+      result1 = await service.postTransactionItems(transactionItems);
+      if (result1.statusCode < 200 || result1.statusCode > 299) throw "";
+    } catch (e) {
+      return "There was an error in processing transaction items.";
+    }
 
     return toReturn;
   }

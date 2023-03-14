@@ -78,6 +78,7 @@ class CheckoutScreenProvider with ChangeNotifier {
         totalQuantity: totalItems,
         price: totalPrice,
       ),
+      cartItems,
     );
 
     if (result0 is String) {

@@ -80,7 +80,7 @@ class PaymentSuccessScreen extends StatelessWidget {
                     children: [
                       const TextSpan(text: 'Transaction '),
                       TextSpan(
-                        text: '$subId... ',
+                        text: '$subId ',
                         style: kTitleStyle.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
