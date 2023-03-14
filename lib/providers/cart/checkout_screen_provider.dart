@@ -74,7 +74,7 @@ class CheckoutScreenProvider with ChangeNotifier {
 
     final result0 = await helper.postTransaction(
       Transaction(
-        paymentMethod: paymentMethod.toString(),
+        paymentMethod: paymentMethod.name.toString(),
         totalQuantity: totalItems,
         price: totalPrice,
       ),
