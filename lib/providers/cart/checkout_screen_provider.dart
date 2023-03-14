@@ -82,7 +82,7 @@ class CheckoutScreenProvider with ChangeNotifier {
     );
 
     if (result0 is String) {
-      _errorMessage = 'There was an error making the transaction.';
+      _errorMessage = result0;
       return null;
     }
 
