@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toolmart/components/error_dialog.dart';
 import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/item.dart';
 import 'package:toolmart/models/helpers/api_helper.dart';
@@ -14,11 +15,13 @@ class ItemProvider with ChangeNotifier {
   bool _inAsync = false;
   String? _errorMessage;
 
-  int stars = 0;
-  String review = '';
+  int _stars = 0;
+  String _review = '';
 
   bool get inAsync => _inAsync;
   String? get errorMessage => _errorMessage;
+
+  int get stars => _stars;
 
   Future<bool> postCartItem() async {
     toggleInAsync();
@@ -43,8 +46,79 @@ class ItemProvider with ChangeNotifier {
     return true;
   }
 
+  Future<bool> postReview() async {
+    toggleInAsync();
+    _errorMessage = null;
+
+    final helper = ApiHelper.helper;
+    final result = await helper.postReview(_stars, _review, item.id!);
+
+    if (result is String) {
+      _errorMessage = result;
+      toggleInAsync();
+      return false;
+    }
+
+    toggleInAsync();
+    return true;
+  }
+
+  Future<void> showCustomDialog(
+    BuildContext context, {
+    String? message,
+    String? title,
+  }) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => CustomDialog(
+        title: title, // defaults to error
+        message: message, // defaults to error message
+      ),
+    );
+  }
+
+  void onAddTap(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    final isSuccessful = await postCartItem();
+
+    if (!isSuccessful) {
+      // ignore: use_build_context_synchronously
+      return showCustomDialog(context, message: errorMessage);
+    }
+
+    // ignore: use_build_context_synchronously
+    showCustomDialog(
+      context,
+      title: 'Success!',
+      message: 'Successfully added item to cart.',
+    );
+
+    navigator.pop();
+  }
+
+  void onSendTap(BuildContext context) async {
+    final isSuccessful = await postReview();
+
+    if (!isSuccessful) {
+      // ignore: use_build_context_synchronously
+      return showCustomDialog(context, message: _errorMessage);
+    }
+
+    // ignore: use_build_context_synchronously
+    return showCustomDialog(
+      context,
+      title: 'Success!',
+      message: 'Successfully made review.',
+    );
+  }
+
   void onStarTap(int index) {
-    stars = index + 1;
+    _stars = index + 1;
+    if (!_isDisposed) notifyListeners();
+  }
+
+  void onReviewChanged(String s) {
+    _review = s;
     if (!_isDisposed) notifyListeners();
   }
 

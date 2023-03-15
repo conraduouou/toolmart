@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:toolmart/color_schemes.g.dart';
-import 'package:toolmart/components/error_dialog.dart';
 import 'package:toolmart/components/on_tap_wrapper.dart';
 import 'package:toolmart/components/toolmart_control_button.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
@@ -24,25 +23,6 @@ class ItemScreen extends StatelessWidget {
   static const id = '/home/item';
   final Item itemDetails;
 
-  Future<void> _showErrorDialog(BuildContext context, String? message) async {
-    return await showDialog(
-      context: context,
-      builder: (context) => CustomDialog(
-        message: message,
-      ),
-    );
-  }
-
-  Future<void> _showSuccessDialog(BuildContext context) async {
-    return await showDialog(
-      context: context,
-      builder: (context) => const CustomDialog(
-        title: 'Success!',
-        message: 'Successfully added to cart.',
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -56,19 +36,7 @@ class ItemScreen extends StatelessWidget {
             backgroundColor: kTertiaryColor.shade70,
             bottomNavigationBar: ToolMartStickyButton(
               text: 'Add to Cart',
-              onTap: () async {
-                final navigator = Navigator.of(context);
-                final isSuccessful = await provider.postCartItem();
-
-                if (!isSuccessful) {
-                  // ignore: use_build_context_synchronously
-                  _showErrorDialog(context, provider.errorMessage);
-                }
-
-                // ignore: use_build_context_synchronously
-                _showSuccessDialog(context);
-                navigator.pop();
-              },
+              onTap: () => provider.onAddTap(context),
             ),
             body: child!,
           );
@@ -316,7 +284,11 @@ class _RatingControls extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 25),
-          const ToolMartMinimalField(hintText: 'Leave a review'),
+          ToolMartMinimalField(
+            hintText: 'Leave a review',
+            onChanged: provider.onReviewChanged,
+            onSendTap: () => provider.onSendTap(context),
+          ),
           const SizedBox(height: 40),
         ],
       ),

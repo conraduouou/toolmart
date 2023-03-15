@@ -11,13 +11,15 @@ class ToolMartMinimalField extends StatefulWidget {
     this.width,
     this.onChanged,
     this.hintText,
+    this.onSendTap,
   });
 
   final FocusNode? focusNode;
   final double? height;
   final double? width;
-  final Function(String)? onChanged;
+  final void Function(String)? onChanged;
   final String? hintText;
+  final VoidCallback? onSendTap;
 
   @override
   State<ToolMartMinimalField> createState() => _ToolMartMinimalFieldState();
@@ -80,7 +82,7 @@ class _ToolMartMinimalFieldState extends State<ToolMartMinimalField> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const _SendButton(),
+                  _SendButton(onTap: widget.onSendTap),
                 ],
               ),
             ),
@@ -109,9 +111,11 @@ class _ToolMartMinimalFieldState extends State<ToolMartMinimalField> {
 }
 
 class _SendButton extends StatelessWidget {
-  const _SendButton();
+  const _SendButton({
+    this.onTap,
+  });
 
-  //TODO: implement onTap feature
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +124,7 @@ class _SendButton extends StatelessWidget {
       highlightColor: Colors.transparent,
       hoverColor: Colors.transparent,
       splashColor: Colors.transparent,
+      onTap: onTap,
       child: SvgPicture.asset(
         'assets/icons/ic-send.svg',
       ),

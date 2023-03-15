@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/item.dart';
+import 'package:toolmart/models/core/review.dart';
 import 'package:toolmart/models/core/transaction.dart';
 import 'package:toolmart/models/core/transaction_item.dart';
 import 'package:toolmart/models/core/user.dart';
@@ -16,7 +17,7 @@ class ApiHelper {
   static final _helper = ApiHelper._();
   static ApiHelper get helper => _helper;
 
-  static const _timeout = Duration(seconds: 10);
+  static const _timeout = Duration(seconds: 15);
 
   Future<dynamic> getCartItems() async {
     final service = ApiService.service;
@@ -287,5 +288,21 @@ class ApiHelper {
     c.close();
 
     return toReturn;
+  }
+
+  Future<dynamic> postReview(int rating, String message, String itemId) async {
+    final service = ApiService.service;
+    late final http.Response result;
+
+    try {
+      final review =
+          Review(itemId: itemId, userComment: message, userRating: rating);
+      result = await service.postReview(review).timeout(_timeout);
+      if (result.statusCode < 200 || result.statusCode > 299) throw '';
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection';
+    } catch (e) {
+      return 'There was an error making the review.';
+    }
   }
 }

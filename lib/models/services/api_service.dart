@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:toolmart/models/core/cart_item.dart';
+import 'package:toolmart/models/core/review.dart';
 import 'package:toolmart/models/core/transaction.dart';
 import 'package:toolmart/models/core/transaction_item.dart';
 import 'package:toolmart/models/helpers/toolmart_storage.dart';
@@ -159,6 +160,29 @@ class ApiService {
     request.headers.set('content-type', 'application/json');
 
     request.add(utf8.encode(jsonEncode(requestBody)));
+    HttpClientResponse httpResponse = await request.close();
+    if (client == null) localClient.close();
+
+    final responseBody = await httpResponse.transform(utf8.decoder).join();
+    final statusCode = httpResponse.statusCode;
+    final reasonPhrase = httpResponse.reasonPhrase;
+
+    return http.Response(responseBody, statusCode, reasonPhrase: reasonPhrase);
+  }
+
+  Future<http.Response> postReview(Review review, {HttpClient? client}) async {
+    final userId = await ToolMartStorage.instance.read(key: 'userId');
+    if (userId == null) return http.Response('Unauthorized', 401);
+
+    review.userId = userId;
+
+    Uri postUrl = Uri.https(_apiURL, '/api/reviews');
+
+    HttpClient localClient = client ?? HttpClient();
+    HttpClientRequest request = await localClient.postUrl(postUrl);
+    request.headers.set('content-type', 'application/json');
+
+    request.add(utf8.encode(jsonEncode(review.toJson())));
     HttpClientResponse httpResponse = await request.close();
     if (client == null) localClient.close();
 
