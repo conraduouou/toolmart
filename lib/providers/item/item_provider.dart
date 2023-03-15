@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:toolmart/components/error_dialog.dart';
 import 'package:toolmart/models/core/cart_item.dart';
 import 'package:toolmart/models/core/item.dart';
+import 'package:toolmart/models/core/review.dart';
 import 'package:toolmart/models/helpers/api_helper.dart';
 
 class ItemProvider with ChangeNotifier {
@@ -9,6 +10,7 @@ class ItemProvider with ChangeNotifier {
 
   ItemProvider(this.item) {
     item.toOrder = 1;
+    getReviews();
   }
 
   bool _isDisposed = false;
@@ -17,6 +19,8 @@ class ItemProvider with ChangeNotifier {
 
   int _stars = 0;
   String _review = '';
+
+  final reviews = <Review>[];
 
   bool get inAsync => _inAsync;
   String? get errorMessage => _errorMessage;
@@ -47,6 +51,24 @@ class ItemProvider with ChangeNotifier {
     return true;
   }
 
+  Future<void> getReviews({bool toggle = true}) async {
+    if (toggle) toggleInAsync();
+    _errorMessage = null;
+    reviews.clear();
+
+    final helper = ApiHelper.helper;
+    final result = await helper.getReviews(item.id!);
+
+    if (result is String) {
+      _errorMessage = result;
+      if (toggle) toggleInAsync();
+      return;
+    }
+
+    reviews.addAll(result);
+    if (toggle) toggleInAsync();
+  }
+
   Future<bool> postReview() async {
     toggleInAsync();
     _errorMessage = null;
@@ -62,6 +84,9 @@ class ItemProvider with ChangeNotifier {
 
     _stars = 0;
     _review = '';
+
+    await getReviews(toggle: false);
+
     toggleInAsync();
     return true;
   }

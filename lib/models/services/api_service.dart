@@ -170,6 +170,14 @@ class ApiService {
     return http.Response(responseBody, statusCode, reasonPhrase: reasonPhrase);
   }
 
+  Future<http.Response> getReviews(String itemId) async {
+    final userId = await ToolMartStorage.instance.read(key: 'userId');
+    if (userId == null) return http.Response('Unauthorized', 401);
+    Uri getUrl = Uri.https(_apiURL, '/api/reviews/$itemId');
+    http.Response response = await http.get(getUrl);
+    return response;
+  }
+
   Future<http.Response> postReview(Review review, {HttpClient? client}) async {
     final userId = await ToolMartStorage.instance.read(key: 'userId');
     if (userId == null) return http.Response('Unauthorized', 401);

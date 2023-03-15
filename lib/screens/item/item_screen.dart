@@ -12,6 +12,7 @@ import 'package:toolmart/components/triangle_painter.dart';
 import 'package:toolmart/components/utility_container.dart';
 import 'package:toolmart/constants.dart';
 import 'package:toolmart/models/core/item.dart';
+import 'package:toolmart/models/core/review.dart';
 import 'package:toolmart/providers/item/item_provider.dart';
 
 class ItemScreen extends StatelessWidget {
@@ -53,17 +54,27 @@ class ItemScreen extends StatelessWidget {
               ),
             ),
             const SliverToBoxAdapter(child: _RatingControls()),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return UtilityContainer(
-                    padding:
-                        EdgeInsets.fromLTRB(20, index == 0 ? 5 : 0, 20, 16),
-                    child: const _Review(),
-                  );
-                },
-                childCount: 4,
-              ),
+            Selector<ItemProvider, int>(
+              selector: (ctx, p) => p.reviews.length,
+              builder: (subContext, reviewCount, _) {
+                final reviews =
+                    subContext.read<ItemProvider>().reviews.reversed.toList();
+
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return UtilityContainer(
+                        padding:
+                            EdgeInsets.fromLTRB(20, index == 0 ? 5 : 0, 20, 16),
+                        child: _Review(
+                          review: reviews[index],
+                        ),
+                      );
+                    },
+                    childCount: reviewCount,
+                  ),
+                );
+              },
             ),
             const SliverToBoxAdapter(child: UtilityContainer(height: 80))
           ],
@@ -187,7 +198,9 @@ class _ItemScreenDetails extends StatelessWidget {
 }
 
 class _Review extends StatelessWidget {
-  const _Review();
+  const _Review({required this.review});
+
+  final Review review;
 
   @override
   Widget build(BuildContext context) {
@@ -218,7 +231,7 @@ class _Review extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '3.5',
+                        '${review.userRating!}',
                         style: kLabelStyle.copyWith(
                           fontWeight: FontWeight.w600,
                           color: kTertiaryColor.shade70,
@@ -231,7 +244,7 @@ class _Review extends StatelessWidget {
                   const SizedBox(height: 5),
                   Flexible(
                     child: Text(
-                      'What a great item!',
+                      review.userComment!,
                       style: kLabelStyle.copyWith(
                         color: Colors.black,
                         fontWeight: FontWeight.normal,

@@ -290,6 +290,24 @@ class ApiHelper {
     return toReturn;
   }
 
+  Future<dynamic> getReviews(String itemId) async {
+    final service = ApiService.service;
+    late final http.Response response;
+
+    try {
+      response = await service.getReviews(itemId).timeout(_timeout);
+      if (response.statusCode != 200) throw '';
+    } catch (e) {
+      return 'There was an error getting item reviews.';
+    }
+
+    final data = jsonDecode(response.body);
+    if (data is! List) return 'There was an error processing item reviews.';
+    final toReturn = data.map<Review>((e) => Review.fromJson(e)).toList();
+
+    return toReturn;
+  }
+
   Future<dynamic> postReview(int rating, String message, String itemId) async {
     final service = ApiService.service;
     late final http.Response result;
