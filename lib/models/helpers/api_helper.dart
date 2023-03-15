@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -15,13 +16,17 @@ class ApiHelper {
   static final _helper = ApiHelper._();
   static ApiHelper get helper => _helper;
 
+  static const _timeout = Duration(seconds: 10);
+
   Future<dynamic> getCartItems() async {
     final service = ApiService.service;
     late final http.Response result;
 
     try {
-      result = await service.getCartItems();
+      result = await service.getCartItems().timeout(_timeout);
       if (result.statusCode != 200) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return "There was an error getting this item.";
     }
@@ -41,8 +46,10 @@ class ApiHelper {
     late final http.Response result;
 
     try {
-      result = await service.deleteCartItem(cartItem);
+      result = await service.deleteCartItem(cartItem).timeout(_timeout);
       if (result.statusCode < 200 || result.statusCode > 299) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return "There was an error making this request.";
     }
@@ -55,8 +62,10 @@ class ApiHelper {
     late final http.Response result;
 
     try {
-      result = await service.deleteCartItems();
+      result = await service.deleteCartItems().timeout(_timeout);
       if (result.statusCode < 200 || result.statusCode > 299) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return "There was an error making this request.";
     }
@@ -69,8 +78,10 @@ class ApiHelper {
     late final http.Response result;
 
     try {
-      result = await service.patchCartItemQuantity(cartItem);
+      result = await service.patchCartItemQuantity(cartItem).timeout(_timeout);
       if (result.statusCode < 200 || result.statusCode > 299) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return "There was an error making this request.";
     }
@@ -83,8 +94,10 @@ class ApiHelper {
     late final http.Response result;
 
     try {
-      result = await service.postCartItem(cartItem);
+      result = await service.postCartItem(cartItem).timeout(_timeout);
       if (result.statusCode < 200 || result.statusCode > 299) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return "There was an error getting this item.";
     }
@@ -97,8 +110,10 @@ class ApiHelper {
     late final http.Response result;
 
     try {
-      result = await service.getItems();
+      result = await service.getItems().timeout(_timeout);
       if (result.statusCode != 200) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return "There was an error getting this item.";
     }
@@ -118,8 +133,10 @@ class ApiHelper {
     late final http.Response result;
 
     try {
-      result = await service.getItemById(id);
+      result = await service.getItemById(id).timeout(_timeout);
       if (result.statusCode != 200) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return "There was an error getting this item.";
     }
@@ -135,8 +152,10 @@ class ApiHelper {
     late final http.Response response;
 
     try {
-      response = await service.getUserByEmail(email);
+      response = await service.getUserByEmail(email).timeout(_timeout);
       if (response.statusCode != 200) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return "There was an error getting the user by email.";
     }
@@ -152,8 +171,10 @@ class ApiHelper {
     late final http.Response response;
 
     try {
-      response = await service.getTransactions();
+      response = await service.getTransactions().timeout(_timeout);
       if (response.statusCode != 200) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return 'There was an error retrieving transactions.';
     }
@@ -180,8 +201,12 @@ class ApiHelper {
     late final http.Response result1;
 
     try {
-      result0 = await service.postTransaction(transaction, client: c);
+      result0 = await service
+          .postTransaction(transaction, client: c)
+          .timeout(_timeout);
       if (result0.statusCode < 200 || result0.statusCode > 299) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return "There was an error making the transaction.";
     }
@@ -201,8 +226,12 @@ class ApiHelper {
           )
           .toList();
 
-      result1 = await service.postTransactionItems(transactionItems, client: c);
+      result1 = await service
+          .postTransactionItems(transactionItems, client: c)
+          .timeout(_timeout);
       if (result1.statusCode < 200 || result1.statusCode > 299) throw "";
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return "There was an error in processing transaction items.";
     }
@@ -218,8 +247,11 @@ class ApiHelper {
     late final http.Response result;
 
     try {
-      result = await service.getTransactionItems(id, client: c);
+      result =
+          await service.getTransactionItems(id, client: c).timeout(_timeout);
       if (result.statusCode != 200) throw '';
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return 'There was an error in retrieving transaction items.';
     }
@@ -235,8 +267,9 @@ class ApiHelper {
 
     try {
       for (final transaction in toReturn) {
-        final result =
-            await service.getItemById(transaction.itemId!, client: c);
+        final result = await service
+            .getItemById(transaction.itemId!, client: c)
+            .timeout(_timeout);
         if (result.statusCode != 200) throw '';
 
         final resultData = jsonDecode(result.body);
@@ -245,6 +278,8 @@ class ApiHelper {
         transaction.itemName = item.name;
         transaction.itemPrice = item.price;
       }
+    } on TimeoutException {
+      return 'The process timed out. Please check your internet connection.';
     } catch (e) {
       return 'There was an error in finalizing transaction items.';
     }
