@@ -22,6 +22,7 @@ class ItemProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   int get stars => _stars;
+  String get review => _review;
 
   Future<bool> postCartItem() async {
     toggleInAsync();
@@ -59,6 +60,8 @@ class ItemProvider with ChangeNotifier {
       return false;
     }
 
+    _stars = 0;
+    _review = '';
     toggleInAsync();
     return true;
   }

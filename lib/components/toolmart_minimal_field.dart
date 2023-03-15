@@ -12,6 +12,7 @@ class ToolMartMinimalField extends StatefulWidget {
     this.onChanged,
     this.hintText,
     this.onSendTap,
+    this.initialText,
   });
 
   final FocusNode? focusNode;
@@ -19,6 +20,7 @@ class ToolMartMinimalField extends StatefulWidget {
   final double? width;
   final void Function(String)? onChanged;
   final String? hintText;
+  final String? initialText;
   final VoidCallback? onSendTap;
 
   @override
@@ -34,8 +36,24 @@ class _ToolMartMinimalFieldState extends State<ToolMartMinimalField> {
   @override
   void initState() {
     _controller = TextEditingController();
+    _controller.text = widget.initialText ?? '';
     _focusNode = widget.focusNode ?? FocusNode();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _controller.text = widget.initialText ?? '';
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(covariant ToolMartMinimalField oldWidget) {
+    final initial = widget.initialText ?? '';
+    _controller.text = initial;
+
+    _controller.selection = TextSelection.collapsed(offset: initial.length);
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

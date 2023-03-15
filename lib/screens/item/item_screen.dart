@@ -253,7 +253,6 @@ class _RatingControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final stars = context.select<ItemProvider, int>((p) => p.stars);
     final provider = context.read<ItemProvider>();
 
     return UtilityContainer(
@@ -261,33 +260,42 @@ class _RatingControls extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (int i = 0; i < 5; i++)
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    OnTapWrapper(
-                      onTap: () => provider.onStarTap(i),
-                      child: Opacity(
-                        opacity: i + 1 <= stars ? 1 : 0.2,
-                        child: SvgPicture.asset(
-                          'assets/icons/ic-star.svg',
-                          width: 43,
+          Selector<ItemProvider, int>(
+            selector: (ctx, p) => p.stars,
+            builder: (_, stars, __) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int i = 0; i < 5; i++)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        OnTapWrapper(
+                          onTap: () => provider.onStarTap(i),
+                          child: Opacity(
+                            opacity: i + 1 <= stars ? 1 : 0.2,
+                            child: SvgPicture.asset(
+                              'assets/icons/ic-star.svg',
+                              width: 43,
+                            ),
+                          ),
                         ),
-                      ),
+                        i < 5 ? const SizedBox(width: 15) : Container()
+                      ],
                     ),
-                    i < 5 ? const SizedBox(width: 15) : Container()
-                  ],
-                ),
-            ],
+                ],
+              );
+            },
           ),
           const SizedBox(height: 25),
-          ToolMartMinimalField(
-            hintText: 'Leave a review',
-            onChanged: provider.onReviewChanged,
-            onSendTap: () => provider.onSendTap(context),
+          Selector<ItemProvider, String>(
+            selector: (ctx, p) => p.review,
+            builder: (_, review, __) => ToolMartMinimalField(
+              hintText: 'Leave a review',
+              initialText: provider.review,
+              onChanged: provider.onReviewChanged,
+              onSendTap: () => provider.onSendTap(context),
+            ),
           ),
           const SizedBox(height: 40),
         ],
