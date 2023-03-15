@@ -12,8 +12,10 @@ class ItemProvider with ChangeNotifier {
 
   bool _isDisposed = false;
   bool _inAsync = false;
-
   String? _errorMessage;
+
+  int stars = 0;
+  String review = '';
 
   bool get inAsync => _inAsync;
   String? get errorMessage => _errorMessage;
@@ -39,6 +41,11 @@ class ItemProvider with ChangeNotifier {
 
     toggleInAsync();
     return true;
+  }
+
+  void onStarTap(int index) {
+    stars = index + 1;
+    if (!_isDisposed) notifyListeners();
   }
 
   void onMinusTap() {

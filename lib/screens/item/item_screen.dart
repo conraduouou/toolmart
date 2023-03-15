@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:toolmart/color_schemes.g.dart';
 import 'package:toolmart/components/error_dialog.dart';
+import 'package:toolmart/components/on_tap_wrapper.dart';
 import 'package:toolmart/components/toolmart_control_button.dart';
 import 'package:toolmart/components/toolmart_back_button.dart';
 import 'package:toolmart/components/toolmart_divider.dart';
@@ -83,20 +84,7 @@ class ItemScreen extends StatelessWidget {
                 child: ToolMartDivider(height: 80),
               ),
             ),
-            SliverToBoxAdapter(
-              child: UtilityContainer(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    _RatingControls(),
-                    SizedBox(height: 25),
-                    ToolMartMinimalField(hintText: 'Leave a review'),
-                    SizedBox(height: 40),
-                  ],
-                ),
-              ),
-            ),
+            const SliverToBoxAdapter(child: _RatingControls()),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
@@ -297,21 +285,41 @@ class _RatingControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (int i = 0; i < 5; i++)
+    final stars = context.select<ItemProvider, int>((p) => p.stars);
+    final provider = context.read<ItemProvider>();
+
+    return UtilityContainer(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Opacity(
-                opacity: 0.2,
-                child: SvgPicture.asset('assets/icons/ic-star.svg', width: 43),
-              ),
-              i < 5 ? const SizedBox(width: 15) : Container()
+              for (int i = 0; i < 5; i++)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    OnTapWrapper(
+                      onTap: () => provider.onStarTap(i),
+                      child: Opacity(
+                        opacity: i + 1 <= stars ? 1 : 0.2,
+                        child: SvgPicture.asset(
+                          'assets/icons/ic-star.svg',
+                          width: 43,
+                        ),
+                      ),
+                    ),
+                    i < 5 ? const SizedBox(width: 15) : Container()
+                  ],
+                ),
             ],
           ),
-      ],
+          const SizedBox(height: 25),
+          const ToolMartMinimalField(hintText: 'Leave a review'),
+          const SizedBox(height: 40),
+        ],
+      ),
     );
   }
 }
